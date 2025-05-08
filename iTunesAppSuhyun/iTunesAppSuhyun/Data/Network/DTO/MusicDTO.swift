@@ -24,3 +24,19 @@ struct MusicDTO: Decodable {
         case durationInMillis = "trackTimeMillis"
     }
 }
+
+extension MusicDTO {
+    func toMusic() -> Music {
+        let dateFormatter = DateFormatter()
+        let date = dateFormatter.date(from: releaseDate) ?? Date() // MappingError
+
+        return Music(
+            musicId: musicId,
+            title: title,
+            artist: artist,
+            imageURL: imageURL,
+            releaseDate: date,
+            durationInSeconds: Double(durationInMillis) / 1000
+        )
+    }
+}

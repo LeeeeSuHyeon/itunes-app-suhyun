@@ -20,7 +20,6 @@ final class NetworkManager: NetworkManagerProtocol {
 
     func fetchData<T: Decodable>(url: URL) async throws -> APIResponse<T> {
         let urlRequest = URLRequest(url: url)
-        print(url)
 
         do {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
@@ -40,7 +39,7 @@ final class NetworkManager: NetworkManagerProtocol {
             if let networkError = error as? NetworkError {
                 throw networkError
             }
-            
+
             throw NetworkError.networkFailure(error: error)
         }
     }
