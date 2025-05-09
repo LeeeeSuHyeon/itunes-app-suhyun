@@ -11,6 +11,7 @@ struct Music: Hashable {
     let musicId: Int
     let title: String
     let artist: String
+    let album: String
     let imageURL: String
     let releaseDate: Date
     let durationInSeconds: Int
