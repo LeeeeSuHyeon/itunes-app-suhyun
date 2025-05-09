@@ -52,10 +52,14 @@ final class HomeViewModel: ViewModelProtocol {
             async let autumnMusic = musicUseCase.fetchMusic(keyword: "가을", limit: 30)
             async let winterMusic = musicUseCase.fetchMusic(keyword: "겨울", limit: 15)
 
-            state.springMusic.onNext( try await springMusic)
-            state.summerMusic.onNext( try await summerMusic)
-            state.autumnMusic.onNext( try await autumnMusic)
-            state.winterMusic.onNext( try await winterMusic)
+            do {
+                state.springMusic.onNext( try await springMusic)
+                state.summerMusic.onNext( try await summerMusic)
+                state.autumnMusic.onNext( try await autumnMusic)
+                state.winterMusic.onNext( try await winterMusic)
+            } catch {
+                state.error.onNext(AppError(error))
+            }
         }
     }
 }

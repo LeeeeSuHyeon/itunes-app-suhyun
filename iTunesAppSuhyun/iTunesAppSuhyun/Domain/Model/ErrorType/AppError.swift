@@ -13,21 +13,23 @@ protocol AppErrorProtocol: LocalizedError {
 }
 
 enum AppError: AppErrorProtocol {
-    case NetworkError(NetworkError)
+    case networkError(NetworkError)
     case unKnown(Error)
 
     init(_ error: Error) {
         switch error {
         case let error as NetworkError:
-            self = .NetworkError(error)
+            self = .networkError(error)
         default:
             self = .unKnown(error)
         }
     }
+}
 
+extension AppError {
     var errorDescription: String? {
         switch self {
-        case .NetworkError(let networkError):
+        case .networkError(let networkError):
             networkError.errorDescription
         case .unKnown:
             "알 수 없는 오류가 발생했습니다"
@@ -36,10 +38,26 @@ enum AppError: AppErrorProtocol {
 
     var debugDescription: String {
         switch self {
-        case .NetworkError(let networkError):
+        case .networkError(let networkError):
             networkError.debugDescription
         case .unKnown(let error):
             "알 수 없는 에러 발생: \(error.localizedDescription)"
+        }
+    }
+}
+
+extension AppError {
+    enum AlertType: String {
+        case networkError = "네트워크 오류"
+        case defaultError = "오류"
+    }
+
+    var alertType: AlertType {
+        switch self {
+        case .networkError:
+            return .networkError
+        default:
+            return .defaultError
         }
     }
 }

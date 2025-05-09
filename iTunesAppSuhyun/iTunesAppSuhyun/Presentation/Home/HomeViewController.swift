@@ -103,9 +103,11 @@ class HomeViewController: UIViewController {
         })
         .disposed(by: disposeBag)
 
-        homeViewModel.state.error.subscribe(onNext: { error in
-            print(error)
-        }).disposed(by: disposeBag)
+        homeViewModel.state.error
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: {[weak self] error in
+                self?.showErrorAlert(error: error)
+            }).disposed(by: disposeBag)
 
         homeViewModel.action?(.fetchMusic)
     }
