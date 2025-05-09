@@ -23,6 +23,8 @@ final class HomeViewModel: ViewModelProtocol {
 
     struct State {
         var springMusic = BehaviorSubject<[Music]>(value: [])
+        var summerMusic = BehaviorSubject<[Music]>(value: [])
+        var autumnMusic = BehaviorSubject<[Music]>(value: [])
         var error = PublishSubject<AppError>()
     }
 
@@ -43,8 +45,14 @@ final class HomeViewModel: ViewModelProtocol {
         let service = ITunesNewtork(manager: NetworkManager())
         Task {
             do {
-                let result = try await service.fetchMusicData(keyword: "IU")
-                state.springMusic.onNext(result.results.map{ $0.toMusic() })
+                //TODO: 4계절 병렬 처리
+                let springMusic = try await service.fetchMusicData(keyword: "봄")
+                let summerMusic = try await service.fetchMusicData(keyword: "여름", limit: 30)
+                let autumnMusic = try await service.fetchMusicData(keyword: "가을", limit: 30)
+
+                state.springMusic.onNext(springMusic.results.map{ $0.toMusic() })
+                state.summerMusic.onNext(summerMusic.results.map{ $0.toMusic() })
+                state.autumnMusic.onNext(autumnMusic.results.map{ $0.toMusic() })
             } catch {
                 state.error.onNext((AppError(error)))
             }

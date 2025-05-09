@@ -48,6 +48,10 @@ class HomeViewController: UIViewController {
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeBannerCell.id, for: indexPath)
                     (cell as? HomeBannerCell)?.configure(with: item)
                     return cell
+                case .Summer(let item), .Autumn(let item):
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeVerticalCell.id, for: indexPath)
+                    (cell as? HomeVerticalCell)?.configure(with: item)
+                    return cell
                 default:
                     return UICollectionViewCell()
                 }
@@ -65,17 +69,36 @@ class HomeViewController: UIViewController {
     }
 
     private func bindViewModel() {
-        homeViewModel.state.springMusic
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: {[weak self] musics in
-                var snapShot = NSDiffableDataSourceSnapshot<HomeSection, HomeItem>()
-                let springSection = HomeSection.Spring
-                let springItem = musics.map { HomeItem.Spring($0) }
-                snapShot.appendSections([springSection])
-                snapShot.appendItems(springItem, toSection: springSection)
+        Observable.combineLatest(
+            homeViewModel.state.springMusic,
+            homeViewModel.state.summerMusic,
+            homeViewModel.state.autumnMusic
+        )
+        .observe(on: MainScheduler.instance)
+        .subscribe(onNext: { [weak self] springMusic, summerMusic, autumnMusic in
+            var snapShot = NSDiffableDataSourceSnapshot<HomeSection, HomeItem>()
 
-                self?.dataSource?.apply(snapShot)
-            }).disposed(by: disposeBag)
+            let springSection = HomeSection.Spring
+            let springItem = springMusic.map { HomeItem.Spring($0) }
+
+            let summerSection = HomeSection.Summer
+            let summerItem = summerMusic.map { HomeItem.Summer($0) }
+
+            let autumnSection = HomeSection.Autumn
+            let autumnItem = autumnMusic.map { HomeItem.Autumn($0) }
+
+            snapShot.appendSections([springSection, summerSection, autumnSection])
+            snapShot.appendItems(springItem, toSection: springSection)
+            snapShot.appendItems(summerItem, toSection: summerSection)
+            snapShot.appendItems(autumnItem, toSection: autumnSection)
+
+            self?.dataSource?.apply(snapShot)
+        })
+        .disposed(by: disposeBag)
+
+        homeViewModel.state.error.subscribe(onNext: { error in
+            print(error)
+        }).disposed(by: disposeBag)
 
         homeViewModel.action?(.fetchMusic)
     }

@@ -20,9 +20,16 @@ final class HomeView: UIView {
             frame: .zero,
             collectionViewLayout: self.createLayout()
         )
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+
         collectionView.register(
             HomeBannerCell.self,
             forCellWithReuseIdentifier: HomeBannerCell.id
+        )
+        collectionView.register(
+            HomeVerticalCell.self,
+            forCellWithReuseIdentifier: HomeVerticalCell.id
         )
         collectionView
             .register(
@@ -46,69 +53,16 @@ final class HomeView: UIView {
     private func createLayout() -> UICollectionViewCompositionalLayout {
         let configuration = UICollectionViewCompositionalLayoutConfiguration()
         configuration.interSectionSpacing = 20
-        return UICollectionViewCompositionalLayout(sectionProvider: {[weak self] sectionIndex, _ in
-            switch HomeSection(rawValue: sectionIndex) {
-            case .Spring:
-                return self?.createSpringSection()
-            case .Summer:
-                return self?.createSpringSection()
-            case .Autumn:
-                return self?.createSpringSection()
-            case .Winter:
-                return self?.createSpringSection()
-            default:
-                return self?.createSpringSection()
-            }
-        }, configuration: configuration)
-    }
 
-    private func createSpringSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(1.0)
+        return UICollectionViewCompositionalLayout(
+            sectionProvider: { sectionIndex, _ in
+                return HomeSection(rawValue: sectionIndex)?.section
+            },
+            configuration: configuration
         )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.9),
-            heightDimension: .absolute(300)
-        )
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize,
-            subitems: [item]
-        )
-
-        group.contentInsets = NSDirectionalEdgeInsets(
-            top: 0,
-            leading: 8,
-            bottom: 0,
-            trailing: 8
-        )
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .groupPagingCentered
-
-        let headerSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(52)
-        )
-
-        let header = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: headerSize,
-            elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .top
-        )
-        header.contentInsets = NSDirectionalEdgeInsets(
-            top: 0,
-            leading: 20,
-            bottom: 0,
-            trailing: 0
-        )
-        section.boundarySupplementaryItems = [header]
-        return section
     }
 }
+
 private extension HomeView {
 
     func configure() {
@@ -135,7 +89,7 @@ private extension HomeView {
 
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(12)
-            make.directionalHorizontalEdges.bottom.equalToSuperview()
+            make.directionalHorizontalEdges.bottom.equalToSuperview().inset(16)
         }
     }
 
