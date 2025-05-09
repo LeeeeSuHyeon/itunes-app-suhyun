@@ -45,20 +45,15 @@ final class HomeViewModel: ViewModelProtocol {
     private func fetchMusic() {
         let service = ITunesNewtork(manager: NetworkManager())
         Task {
-            do {
-                //TODO: 4계절 병렬 처리
-                let springMusic = try await service.fetchMusicData(keyword: "봄")
-                let summerMusic = try await service.fetchMusicData(keyword: "여름", limit: 30)
-                let autumnMusic = try await service.fetchMusicData(keyword: "가을", limit: 30)
-                let winterMusic = try await service.fetchMusicData(keyword: "겨울", limit: 30)
+            async let springMusic = service.fetchMusicData(keyword: "봄")
+            async let summerMusic = service.fetchMusicData(keyword: "여름", limit: 30)
+            async let autumnMusic = service.fetchMusicData(keyword: "가을", limit: 30)
+            async let winterMusic = service.fetchMusicData(keyword: "겨울", limit: 30)
 
-                state.springMusic.onNext(springMusic.results.map{ $0.toMusic() })
-                state.summerMusic.onNext(summerMusic.results.map{ $0.toMusic() })
-                state.autumnMusic.onNext(autumnMusic.results.map{ $0.toMusic() })
-                state.winterMusic.onNext(winterMusic.results.map{ $0.toMusic() })
-            } catch {
-                state.error.onNext((AppError(error)))
-            }
+            state.springMusic.onNext( try await springMusic.results.map{ $0.toMusic() })
+            state.summerMusic.onNext( try await summerMusic.results.map{ $0.toMusic() })
+            state.autumnMusic.onNext( try await autumnMusic.results.map{ $0.toMusic() })
+            state.winterMusic.onNext( try await winterMusic.results.map{ $0.toMusic() })
         }
     }
 }
