@@ -56,7 +56,7 @@ final class HomeView: UIView {
 
     private func createLayout() -> UICollectionViewCompositionalLayout {
         let configuration = UICollectionViewCompositionalLayoutConfiguration()
-        configuration.interSectionSpacing = 20
+        configuration.interSectionSpacing = 30
 
         return UICollectionViewCompositionalLayout(
             sectionProvider: { sectionIndex, _ in
@@ -93,7 +93,8 @@ private extension HomeView {
 
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(12)
-            make.directionalHorizontalEdges.bottom.equalToSuperview().inset(16)
+            make.leading.bottom.equalToSuperview().inset(16)
+            make.trailing.equalToSuperview()
         }
     }
 
