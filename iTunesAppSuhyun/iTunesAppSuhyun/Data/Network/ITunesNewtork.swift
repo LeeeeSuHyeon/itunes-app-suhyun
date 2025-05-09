@@ -7,7 +7,15 @@
 
 import Foundation
 
-final class ITunesNewtork {
+protocol ITunesNetworkProtocol {
+    func fetchMusic(
+        keyword: String,
+        country: String,
+        limit: Int
+    ) async throws -> APIResponse<MusicDTO>
+}
+
+final class ITunesNewtork: ITunesNetworkProtocol {
     private let baseURL = "https://itunes.apple.com/search"
     private let manager: NetworkManagerProtocol
 
@@ -15,20 +23,18 @@ final class ITunesNewtork {
         self.manager = manager
     }
 
-    func fetchMusicData(
+    func fetchMusic(
         keyword: String,
-        country: String = "kr",
-        limit: Int = 10,
-        language: String = "ko_KR",
-        media: String = "music"
+        country: String,
+        limit: Int = 10
     ) async throws -> APIResponse<MusicDTO> {
         var components = URLComponents(string: baseURL)
         components?.queryItems = [
             URLQueryItem(name: "term", value: keyword),
             URLQueryItem(name: "country", value: country),
             URLQueryItem(name: "limit", value: "\(limit)"),
-            URLQueryItem(name: "lang", value: language),
-            URLQueryItem(name: "media", value: media),
+            URLQueryItem(name: "lang", value: "ko_KR"),
+            URLQueryItem(name: "media", value: "music"),
         ]
 
         guard let url = components?.url else {

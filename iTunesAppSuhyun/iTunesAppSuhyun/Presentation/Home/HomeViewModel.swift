@@ -16,6 +16,7 @@ protocol ViewModelProtocol {
 }
 
 final class HomeViewModel: ViewModelProtocol {
+    private let musicUseCase: MusicUseCaseProtocol
 
     enum Action {
         case fetchMusic
@@ -32,7 +33,9 @@ final class HomeViewModel: ViewModelProtocol {
     var action: ((Action) -> Void)?
     var state = State()
 
-    init() {
+    init(musicUseCase: MusicUseCaseProtocol) {
+        self.musicUseCase = musicUseCase
+
         action = {[weak self] action in
             guard let self else { return }
             switch action {
@@ -43,17 +46,16 @@ final class HomeViewModel: ViewModelProtocol {
     }
 
     private func fetchMusic() {
-        let service = ITunesNewtork(manager: NetworkManager())
         Task {
-            async let springMusic = service.fetchMusicData(keyword: "봄")
-            async let summerMusic = service.fetchMusicData(keyword: "여름", limit: 30)
-            async let autumnMusic = service.fetchMusicData(keyword: "가을", limit: 30)
-            async let winterMusic = service.fetchMusicData(keyword: "겨울", limit: 30)
+            async let springMusic = musicUseCase.fetchMusic(keyword: "봄")
+            async let summerMusic = musicUseCase.fetchMusic(keyword: "여름", limit: 30)
+            async let autumnMusic = musicUseCase.fetchMusic(keyword: "가을", limit: 30)
+            async let winterMusic = musicUseCase.fetchMusic(keyword: "겨울", limit: 15)
 
-            state.springMusic.onNext( try await springMusic.results.map{ $0.toMusic() })
-            state.summerMusic.onNext( try await summerMusic.results.map{ $0.toMusic() })
-            state.autumnMusic.onNext( try await autumnMusic.results.map{ $0.toMusic() })
-            state.winterMusic.onNext( try await winterMusic.results.map{ $0.toMusic() })
+            state.springMusic.onNext( try await springMusic)
+            state.summerMusic.onNext( try await summerMusic)
+            state.autumnMusic.onNext( try await autumnMusic)
+            state.winterMusic.onNext( try await winterMusic)
         }
     }
 }

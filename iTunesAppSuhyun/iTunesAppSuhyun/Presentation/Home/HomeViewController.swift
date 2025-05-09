@@ -17,7 +17,7 @@ class HomeViewController: UIViewController {
     private var dataSource: DataSource?
     private let disposeBag = DisposeBag()
 
-    init(homeViewModel: HomeViewModel = HomeViewModel()) {
+    init(homeViewModel: HomeViewModel) {
         self.homeViewModel = homeViewModel
         super.init(nibName: nil, bundle: nil)
     }
