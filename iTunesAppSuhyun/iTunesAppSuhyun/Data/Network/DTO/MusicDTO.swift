@@ -36,7 +36,7 @@ extension MusicDTO {
             artist: artist,
             imageURL: imageURL,
             releaseDate: date,
-            durationInSeconds: Double(durationInMillis) / 1000
+            durationInSeconds: durationInMillis / 1000
         )
     }
 }

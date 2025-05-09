@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Music {
+struct Music: Hashable {
     let musicId: Int
     let title: String
     let artist: String
     let imageURL: String
     let releaseDate: Date
-    let durationInSeconds: TimeInterval
+    let durationInSeconds: Int
 }
