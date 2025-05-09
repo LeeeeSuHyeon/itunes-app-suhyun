@@ -31,6 +31,10 @@ final class HomeView: UIView {
             HomeVerticalCell.self,
             forCellWithReuseIdentifier: HomeVerticalCell.id
         )
+        collectionView.register(
+            HomeBannerCell.self,
+            forCellWithReuseIdentifier: HomeBannerCell.id
+        )
         collectionView
             .register(
                 HeaderView.self,

@@ -25,6 +25,7 @@ final class HomeViewModel: ViewModelProtocol {
         var springMusic = BehaviorSubject<[Music]>(value: [])
         var summerMusic = BehaviorSubject<[Music]>(value: [])
         var autumnMusic = BehaviorSubject<[Music]>(value: [])
+        var winterMusic = BehaviorSubject<[Music]>(value: [])
         var error = PublishSubject<AppError>()
     }
 
@@ -49,10 +50,12 @@ final class HomeViewModel: ViewModelProtocol {
                 let springMusic = try await service.fetchMusicData(keyword: "봄")
                 let summerMusic = try await service.fetchMusicData(keyword: "여름", limit: 30)
                 let autumnMusic = try await service.fetchMusicData(keyword: "가을", limit: 30)
+                let winterMusic = try await service.fetchMusicData(keyword: "겨울", limit: 30)
 
                 state.springMusic.onNext(springMusic.results.map{ $0.toMusic() })
                 state.summerMusic.onNext(summerMusic.results.map{ $0.toMusic() })
                 state.autumnMusic.onNext(autumnMusic.results.map{ $0.toMusic() })
+                state.winterMusic.onNext(winterMusic.results.map{ $0.toMusic() })
             } catch {
                 state.error.onNext((AppError(error)))
             }

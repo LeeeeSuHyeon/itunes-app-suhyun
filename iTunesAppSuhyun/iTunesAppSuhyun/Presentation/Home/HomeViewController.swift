@@ -52,8 +52,10 @@ class HomeViewController: UIViewController {
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeVerticalCell.id, for: indexPath)
                     (cell as? HomeVerticalCell)?.configure(with: item)
                     return cell
-                default:
-                    return UICollectionViewCell()
+                case .Winter(let item):
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeBannerCell.id, for: indexPath)
+                    (cell as? HomeBannerCell)?.configure(with: item)
+                    return cell
                 }
             }
         )
@@ -72,10 +74,11 @@ class HomeViewController: UIViewController {
         Observable.combineLatest(
             homeViewModel.state.springMusic,
             homeViewModel.state.summerMusic,
-            homeViewModel.state.autumnMusic
+            homeViewModel.state.autumnMusic,
+            homeViewModel.state.winterMusic
         )
         .observe(on: MainScheduler.instance)
-        .subscribe(onNext: { [weak self] springMusic, summerMusic, autumnMusic in
+        .subscribe(onNext: { [weak self] springMusic, summerMusic, autumnMusic, winterMusic in
             var snapShot = NSDiffableDataSourceSnapshot<HomeSection, HomeItem>()
 
             let springSection = HomeSection.Spring
@@ -87,10 +90,14 @@ class HomeViewController: UIViewController {
             let autumnSection = HomeSection.Autumn
             let autumnItem = autumnMusic.map { HomeItem.Autumn($0) }
 
-            snapShot.appendSections([springSection, summerSection, autumnSection])
+            let winterSection = HomeSection.Winter
+            let winterItem = winterMusic.map { HomeItem.Winter($0) }
+
+            snapShot.appendSections([springSection, summerSection, autumnSection, winterSection])
             snapShot.appendItems(springItem, toSection: springSection)
             snapShot.appendItems(summerItem, toSection: summerSection)
             snapShot.appendItems(autumnItem, toSection: autumnSection)
+            snapShot.appendItems(winterItem, toSection: winterSection)
 
             self?.dataSource?.apply(snapShot)
         })

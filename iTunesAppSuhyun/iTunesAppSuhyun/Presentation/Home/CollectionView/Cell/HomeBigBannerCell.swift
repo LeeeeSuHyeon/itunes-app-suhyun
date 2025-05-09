@@ -1,14 +1,15 @@
 //
-//  HomeBannerCell.swift
+//  HomeBigBannerCell.swift
 //  iTunesAppSuhyun
 //
-//  Created by 이수현 on 5/9/25.
+//  Created by 이수현 on 5/8/25.
 //
 
 import UIKit
+import SnapKit
 
-final class HomeBannerCell: UICollectionViewCell {
-    static let id = "HomeBannerCell"
+final class HomeBigBannerCell: UICollectionViewCell {
+    static let id = "HomeBigBannerCell"
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -33,12 +34,28 @@ final class HomeBannerCell: UICollectionViewCell {
         return label
     }()
 
+    private let infoHorizontalView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        return stackView
+    }()
+
     private let artistLabel: UILabel = {
         let label = UILabel()
         label.text = "artist"
         label.textColor = .systemGray2
         label.font = .systemFont(ofSize: 12, weight: .bold)
         label.numberOfLines = 1
+        return label
+    }()
+
+    private let replayTimeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "3분 23초"
+        label.textColor = .black
+        label.font = .systemFont(ofSize: 14, weight: .bold)
+        label.numberOfLines = 1
+        label.textAlignment = .right
         return label
     }()
 
@@ -57,17 +74,19 @@ final class HomeBannerCell: UICollectionViewCell {
 
         titleLabel.text = nil
         artistLabel.text = nil
+        replayTimeLabel.text = nil
         imageView.image = nil
     }
 
     func configure(with music: Music) {
         titleLabel.text = music.title
         artistLabel.text = music.artist
+        replayTimeLabel.text = music.durationInSeconds.toReplayTime()
         imageView.setImage(with: music.imageURL)
     }
 }
 
-private extension HomeBannerCell {
+private extension HomeBigBannerCell {
 
     func configure() {
         setLayout()
@@ -83,18 +102,18 @@ private extension HomeBannerCell {
     }
 
     func setHierarchy() {
-        infoVerticalView.addArrangedSubviews(titleLabel, artistLabel)
+        infoVerticalView.addArrangedSubviews(titleLabel, infoHorizontalView)
+        infoHorizontalView.addArrangedSubviews(artistLabel, replayTimeLabel)
         self.contentView.addSubviews(imageView, infoVerticalView)
     }
 
     func setConstraints() {
         imageView.snp.makeConstraints { make in
             make.top.directionalHorizontalEdges.equalToSuperview()
-            make.height.equalTo(imageView.snp.width)
+            make.bottom.equalTo(infoVerticalView.snp.top).offset(-8)
         }
 
         infoVerticalView.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).offset(8)
             make.bottom.directionalHorizontalEdges.equalToSuperview().inset(8)
         }
     }
