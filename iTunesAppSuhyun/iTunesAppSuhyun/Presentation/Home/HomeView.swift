@@ -24,8 +24,8 @@ final class HomeView: UIView {
         collectionView.showsHorizontalScrollIndicator = false
 
         collectionView.register(
-            HomeBannerCell.self,
-            forCellWithReuseIdentifier: HomeBannerCell.id
+            HomeBigBannerCell.self,
+            forCellWithReuseIdentifier: HomeBigBannerCell.id
         )
         collectionView.register(
             HomeVerticalCell.self,

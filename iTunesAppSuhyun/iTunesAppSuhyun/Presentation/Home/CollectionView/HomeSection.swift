@@ -45,20 +45,20 @@ extension HomeSection {
     var section: NSCollectionLayoutSection {
         switch self {
         case .Spring:
-            return self.createBannerSection()
+            return self.createBigBannerSection()
         case .Summer:
             return self.createVerticalSection()
         case .Autumn:
             return self.createVerticalSection()
         case .Winter:
-            return self.createBannerSection()
+            return self.createBigBannerSection()
         }
     }
 }
 
 extension HomeSection {
     // 봄 섹션 (배너)
-    private func createBannerSection() -> NSCollectionLayoutSection {
+    private func createBigBannerSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
             heightDimension: .fractionalHeight(1.0)

@@ -1,5 +1,5 @@
 //
-//  HomeBannerCell.swift
+//  HomeBigBannerCell.swift
 //  iTunesAppSuhyun
 //
 //  Created by 이수현 on 5/8/25.
@@ -8,8 +8,8 @@
 import UIKit
 import SnapKit
 
-final class HomeBannerCell: UICollectionViewCell {
-    static let id = "HomeBannerCell"
+final class HomeBigBannerCell: UICollectionViewCell {
+    static let id = "HomeBigBannerCell"
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -86,7 +86,7 @@ final class HomeBannerCell: UICollectionViewCell {
     }
 }
 
-private extension HomeBannerCell {
+private extension HomeBigBannerCell {
 
     func configure() {
         setLayout()

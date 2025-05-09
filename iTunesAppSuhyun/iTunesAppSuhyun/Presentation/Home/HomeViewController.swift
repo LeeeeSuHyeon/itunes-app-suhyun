@@ -45,8 +45,8 @@ class HomeViewController: UIViewController {
             cellProvider: { collectionView, indexPath, itemIdentifier in
                 switch itemIdentifier {
                 case .Spring(let item):
-                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeBannerCell.id, for: indexPath)
-                    (cell as? HomeBannerCell)?.configure(with: item)
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeBigBannerCell.id, for: indexPath)
+                    (cell as? HomeBigBannerCell)?.configure(with: item)
                     return cell
                 case .Summer(let item), .Autumn(let item):
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeVerticalCell.id, for: indexPath)
