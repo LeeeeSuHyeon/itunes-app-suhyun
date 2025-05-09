@@ -66,9 +66,9 @@ extension HomeSection {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(
             top: 0,
-            leading: 0,
+            leading: 8,
             bottom: 0,
-            trailing: 16
+            trailing: 8
         )
 
         let groupSize = NSCollectionLayoutSize(
@@ -83,6 +83,12 @@ extension HomeSection {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPagingCentered
         section.boundarySupplementaryItems = [createHeaderView()]
+        section.contentInsets = NSDirectionalEdgeInsets(
+            top: 0,
+            leading: 0,
+            bottom: 0,
+            trailing: 8
+        )
         return section
     }
 
