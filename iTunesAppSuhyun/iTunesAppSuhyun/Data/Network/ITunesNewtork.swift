@@ -18,7 +18,7 @@ final class ITunesNewtork {
     func fetchMusicData(
         keyword: String,
         country: String = "kr",
-        limit: Int = 25,
+        limit: Int = 10,
         language: String = "ko_KR",
         media: String = "music"
     ) async throws -> APIResponse<MusicDTO> {
