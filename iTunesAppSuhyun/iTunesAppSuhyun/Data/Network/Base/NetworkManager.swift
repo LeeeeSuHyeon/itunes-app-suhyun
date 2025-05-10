@@ -22,7 +22,7 @@ final class NetworkManager: NetworkManagerProtocol {
         let urlRequest = URLRequest(url: url)
 
         do {
-            let (data, response) = try await URLSession.shared.data(for: urlRequest)
+            let (data, response) = try await session.data(for: urlRequest)
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
             }

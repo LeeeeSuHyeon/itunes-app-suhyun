@@ -36,6 +36,24 @@ struct MusicDTO: Decodable {
         self.releaseDate = try container.decode(String.self, forKey: .releaseDate)
         self.durationInMillis = try container.decodeIfPresent(Int.self, forKey: .durationInMillis) ?? 0
     }
+
+    init(
+        musicId: Int,
+        title: String,
+        artist: String,
+        album: String,
+        imageURL: String,
+        releaseDate: String,
+        durationInMillis: Int
+    ) {
+        self.musicId = musicId
+        self.title = title
+        self.artist = artist
+        self.album = album
+        self.imageURL = imageURL
+        self.releaseDate = releaseDate
+        self.durationInMillis = durationInMillis
+    }
 }
 
 extension MusicDTO {
