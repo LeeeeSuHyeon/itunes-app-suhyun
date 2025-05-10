@@ -1,5 +1,5 @@
 //
-//  NetworkManagerTests.swift
+//  NetworkManagerTest.swift
 //  iTunesAppSuhyunTests
 //
 //  Created by 이수현 on 5/10/25.
@@ -8,9 +8,9 @@
 import XCTest
 @testable import iTunesAppSuhyun
 
-final class NetworkManagerTests: XCTestCase {
+final class NetworkManagerTest: XCTestCase {
     private let url = URL(string: "https://example.com")!
-    private var mockSession = MockSession()
+    private var mockSession: MockSession!
 
     override func setUp() {
         super.setUp()
@@ -18,6 +18,7 @@ final class NetworkManagerTests: XCTestCase {
     }
 
     override func tearDown() {
+        mockSession = nil
         super.tearDown()
     }
 
@@ -86,7 +87,7 @@ final class NetworkManagerTests: XCTestCase {
     }
 
     func test_decoding_error() {
-        let mockData = MockMusicDTO.mockData().data(using: .utf8)
+        let mockData = mockJsonData.data(using: .utf8)
         let expectation = XCTestExpectation(description: "Expect Decoding Error")
 
         mockSession.mockData = mockData
