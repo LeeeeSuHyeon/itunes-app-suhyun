@@ -23,10 +23,10 @@ final class HomeViewModel: ViewModelProtocol {
     }
 
     struct State {
-        var springMusic = BehaviorSubject<[HomeItem.MusicItem]>(value: [])
-        var summerMusic = BehaviorSubject<[HomeItem.MusicItem]>(value: [])
-        var autumnMusic = BehaviorSubject<[HomeItem.MusicItem]>(value: [])
-        var winterMusic = BehaviorSubject<[HomeItem.MusicItem]>(value: [])
+        var springItem = PublishSubject<[HomeItem]>()
+        var summerItem = PublishSubject<[HomeItem]>()
+        var autumnItem = PublishSubject<[HomeItem]>()
+        var winterItem = PublishSubject<[HomeItem]>()
         var error = PublishSubject<AppError>()
     }
 
@@ -47,33 +47,34 @@ final class HomeViewModel: ViewModelProtocol {
 
     private func fetchMusic() {
         Task {
-            async let springMusic = musicUseCase.fetchMusic(keyword: "봄")
-            async let summerMusic = musicUseCase.fetchMusic(keyword: "여름", limit: 30)
-            async let autumnMusic = musicUseCase.fetchMusic(keyword: "가을", limit: 30)
-            async let winterMusic = musicUseCase.fetchMusic(keyword: "겨울", limit: 15)
-
             do {
-                state.springMusic.onNext( try await transform(from: springMusic))
-                state.summerMusic.onNext( try await transform(from: summerMusic))
-                state.autumnMusic.onNext( try await transform(from: autumnMusic))
-                state.winterMusic.onNext( try await transform(from: winterMusic))
+                try await withThrowingTaskGroup(of: (HomeSection, [Music]).self) {[weak self] group in
+                    guard let self else { return }
+
+                    HomeSection.allCases.forEach { section in
+                        group.addTask {
+                            let musics = try await self.musicUseCase.fetchMusic(keyword: section.keyword, limit: section.limit)
+                            return (section, musics)
+                        }
+                    }
+
+                    for try await (section, musics) in group {
+                        let items = musics.map { section.createItem(from: $0) }
+                        getSubject(for: section).onNext(items)
+                    }
+                }
             } catch {
                 state.error.onNext(error as? AppError ?? AppError.unKnown(error))
             }
         }
     }
 
-    private func transform(from musics: [Music]) -> [HomeItem.MusicItem] {
-        return musics.map {
-            HomeItem.MusicItem(
-                musicId: $0.musicId,
-                title: $0.title,
-                artist: $0.artist,
-                album: $0.album,
-                imageURL: $0.imageURL,
-                releaseDate: $0.releaseDate,
-                durationInSeconds: $0.durationInSeconds
-            )
+    private func getSubject(for section: HomeSection) -> PublishSubject<[HomeItem]> {
+        switch section {
+        case .spring: return state.springItem
+        case .summer: return state.summerItem
+        case .autumn: return state.autumnItem
+        case .winter: return state.winterItem
         }
     }
 }

@@ -42,15 +42,15 @@ class HomeViewController: UIViewController {
             collectionView: homeView.collectionView,
             cellProvider: { collectionView, indexPath, itemIdentifier in
                 switch itemIdentifier {
-                case .Spring(let item):
+                case .spring(let item):
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeBigBannerCell.id, for: indexPath)
                     (cell as? HomeBigBannerCell)?.configure(with: item)
                     return cell
-                case .Summer(let item), .Autumn(let item):
+                case .summer(let item), .autumn(let item):
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeVerticalCell.id, for: indexPath)
                     (cell as? HomeVerticalCell)?.configure(with: item)
                     return cell
-                case .Winter(let item):
+                case .winter(let item):
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeBannerCell.id, for: indexPath)
                     (cell as? HomeBannerCell)?.configure(with: item)
                     return cell
@@ -76,32 +76,20 @@ class HomeViewController: UIViewController {
 
     private func bindViewModel() {
         Observable.combineLatest(
-            homeViewModel.state.springMusic,
-            homeViewModel.state.summerMusic,
-            homeViewModel.state.autumnMusic,
-            homeViewModel.state.winterMusic
+            homeViewModel.state.springItem,
+            homeViewModel.state.summerItem,
+            homeViewModel.state.autumnItem,
+            homeViewModel.state.winterItem
         )
+        .map { [$0, $1, $2, $3] }
         .observe(on: MainScheduler.instance)
-        .subscribe(onNext: { [weak self] springMusic, summerMusic, autumnMusic, winterMusic in
+        .subscribe(onNext: { [weak self] items in
             var snapShot = NSDiffableDataSourceSnapshot<HomeSection, HomeItem>()
 
-            let springSection = HomeSection.Spring
-            let springItem = springMusic.map { HomeItem.Spring($0) }
-
-            let summerSection = HomeSection.Summer
-            let summerItem = summerMusic.map { HomeItem.Summer($0) }
-
-            let autumnSection = HomeSection.Autumn
-            let autumnItem = autumnMusic.map { HomeItem.Autumn($0) }
-
-            let winterSection = HomeSection.Winter
-            let winterItem = winterMusic.map { HomeItem.Winter($0) }
-
-            snapShot.appendSections([springSection, summerSection, autumnSection, winterSection])
-            snapShot.appendItems(springItem, toSection: springSection)
-            snapShot.appendItems(summerItem, toSection: summerSection)
-            snapShot.appendItems(autumnItem, toSection: autumnSection)
-            snapShot.appendItems(winterItem, toSection: winterSection)
+            zip(HomeSection.allCases, items).forEach { section, item in
+                snapShot.appendSections([section])
+                snapShot.appendItems(item, toSection: section)
+            }
 
             self?.dataSource?.apply(snapShot)
         })

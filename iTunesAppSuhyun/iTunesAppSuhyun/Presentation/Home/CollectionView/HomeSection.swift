@@ -8,50 +8,77 @@
 import UIKit
 
 enum HomeSection: Int, CaseIterable, Hashable {
-    case Spring
-    case Summer
-    case Autumn
-    case Winter
+    case spring
+    case summer
+    case autumn
+    case winter
 }
 
 extension HomeSection {
 
+    var keyword: String {
+        switch self {
+        case .spring: return "봄"
+        case .summer: return "여름"
+        case .autumn: return "가을"
+        case .winter: return "겨울"
+        }
+    }
+
+    var limit: Int {
+        switch self {
+        case .spring: return 10
+        case .summer, .autumn: return 30
+        case .winter: return 15
+        }
+    }
+
     var title: String {
         switch self {
-        case .Spring:
+        case .spring:
             "봄 Best"
-        case .Summer:
+        case .summer:
             "여름"
-        case .Autumn:
+        case .autumn:
             "가을"
-        case .Winter:
+        case .winter:
             "겨울"
         }
     }
 
     var subTitle: String {
         switch self {
-        case .Spring:
+        case .spring:
             "봄에 어울리는 음악 Top 10"
-        case .Summer:
+        case .summer:
             "여름에 어울리는 음악"
-        case .Autumn:
+        case .autumn:
             "가을에 어울리는 음악"
-        case .Winter:
+        case .winter:
             "겨울에 어울리는 음악"
         }
     }
 
     var section: NSCollectionLayoutSection {
         switch self {
-        case .Spring:
+        case .spring:
             return self.createBigBannerSection()
-        case .Summer:
+        case .summer:
             return self.createVerticalSection()
-        case .Autumn:
+        case .autumn:
             return self.createVerticalSection()
-        case .Winter:
+        case .winter:
             return self.createBannerSection()
+        }
+    }
+
+    func createItem(from music: Music) -> HomeItem {
+        let item = HomeItem.MusicItem(from: music)
+        switch self {
+        case .spring: return .spring(item)
+        case .summer: return .summer(item)
+        case .autumn: return .autumn(item)
+        case .winter: return .winter(item)
         }
     }
 }
@@ -178,10 +205,10 @@ extension HomeSection {
 }
 
 enum HomeItem: Hashable {
-    case Spring(MusicItem)
-    case Summer(MusicItem)
-    case Autumn(MusicItem)
-    case Winter(MusicItem)
+    case spring(MusicItem)
+    case summer(MusicItem)
+    case autumn(MusicItem)
+    case winter(MusicItem)
 
     struct MusicItem: Hashable {
         let musicId: Int
@@ -191,5 +218,19 @@ enum HomeItem: Hashable {
         let imageURL: String
         let releaseDate: Date
         let durationInSeconds: Int
+    }
+}
+
+extension HomeItem.MusicItem {
+    init(from music: Music) {
+        self.init(
+            musicId: music.musicId,
+            title: music.title,
+            artist: music.artist,
+            album: music.album,
+            imageURL: music.imageURL,
+            releaseDate: music.releaseDate,
+            durationInSeconds: music.durationInSeconds
+        )
     }
 }
