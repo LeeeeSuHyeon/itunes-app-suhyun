@@ -178,8 +178,18 @@ extension HomeSection {
 }
 
 enum HomeItem: Hashable {
-    case Spring(Music)
-    case Summer(Music)
-    case Autumn(Music)
-    case Winter(Music)
+    case Spring(MusicItem)
+    case Summer(MusicItem)
+    case Autumn(MusicItem)
+    case Winter(MusicItem)
+
+    struct MusicItem: Hashable {
+        let musicId: Int
+        let title: String
+        let artist: String
+        let album: String
+        let imageURL: String
+        let releaseDate: Date
+        let durationInSeconds: Int
+    }
 }

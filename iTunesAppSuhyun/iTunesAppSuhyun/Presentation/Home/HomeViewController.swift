@@ -27,8 +27,6 @@ class HomeViewController: UIViewController {
     }
 
     override func loadView() {
-        super.loadView()
-
         view = homeView
     }
 
@@ -61,10 +59,16 @@ class HomeViewController: UIViewController {
         )
 
         dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderView.id, for: indexPath)
+            let headerView = collectionView.dequeueReusableSupplementaryView(
+                ofKind: UICollectionView.elementKindSectionHeader,
+                withReuseIdentifier: HeaderView.id,
+                for: indexPath
+            )
+
             guard let section = HomeSection(rawValue: indexPath.section) else {
                 return UICollectionReusableView()
             }
+
             (headerView as? HeaderView)?.configure(title: section.title, subTitle: section.subTitle)
             return headerView
         }
@@ -112,4 +116,3 @@ class HomeViewController: UIViewController {
         homeViewModel.action?(.fetchMusic)
     }
 }
-

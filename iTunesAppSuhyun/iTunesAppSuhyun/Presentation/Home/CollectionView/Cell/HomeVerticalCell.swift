@@ -71,7 +71,7 @@ final class HomeVerticalCell: UICollectionViewCell {
         imageView.image = nil
     }
 
-    func configure(with music: Music) {
+    func configure(with music: HomeItem.MusicItem) {
         titleLabel.text = music.title
         artistLabel.text = music.artist
         albumLabel.text = music.album

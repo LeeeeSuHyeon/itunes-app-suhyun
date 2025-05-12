@@ -23,10 +23,10 @@ final class HomeViewModel: ViewModelProtocol {
     }
 
     struct State {
-        var springMusic = BehaviorSubject<[Music]>(value: [])
-        var summerMusic = BehaviorSubject<[Music]>(value: [])
-        var autumnMusic = BehaviorSubject<[Music]>(value: [])
-        var winterMusic = BehaviorSubject<[Music]>(value: [])
+        var springMusic = BehaviorSubject<[HomeItem.MusicItem]>(value: [])
+        var summerMusic = BehaviorSubject<[HomeItem.MusicItem]>(value: [])
+        var autumnMusic = BehaviorSubject<[HomeItem.MusicItem]>(value: [])
+        var winterMusic = BehaviorSubject<[HomeItem.MusicItem]>(value: [])
         var error = PublishSubject<AppError>()
     }
 
@@ -53,13 +53,27 @@ final class HomeViewModel: ViewModelProtocol {
             async let winterMusic = musicUseCase.fetchMusic(keyword: "겨울", limit: 15)
 
             do {
-                state.springMusic.onNext( try await springMusic)
-                state.summerMusic.onNext( try await summerMusic)
-                state.autumnMusic.onNext( try await autumnMusic)
-                state.winterMusic.onNext( try await winterMusic)
+                state.springMusic.onNext( try await transform(from: springMusic))
+                state.summerMusic.onNext( try await transform(from: summerMusic))
+                state.autumnMusic.onNext( try await transform(from: autumnMusic))
+                state.winterMusic.onNext( try await transform(from: winterMusic))
             } catch {
                 state.error.onNext(error as? AppError ?? AppError.unKnown(error))
             }
+        }
+    }
+
+    private func transform(from musics: [Music]) -> [HomeItem.MusicItem] {
+        return musics.map {
+            HomeItem.MusicItem(
+                musicId: $0.musicId,
+                title: $0.title,
+                artist: $0.artist,
+                album: $0.album,
+                imageURL: $0.imageURL,
+                releaseDate: $0.releaseDate,
+                durationInSeconds: $0.durationInSeconds
+            )
         }
     }
 }

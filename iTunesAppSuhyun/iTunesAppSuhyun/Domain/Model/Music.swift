@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Music: Hashable {
+struct Music {
     let musicId: Int
     let title: String
     let artist: String
