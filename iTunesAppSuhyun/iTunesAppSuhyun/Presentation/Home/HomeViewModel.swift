@@ -11,12 +11,13 @@ protocol ViewModelProtocol {
     associatedtype Action
     associatedtype State
 
-    var action: ((Action) -> Void)? { get }
+    var action: PublishSubject<Action> { get }
     var state: State { get }
 }
 
 final class HomeViewModel: ViewModelProtocol {
     private let musicUseCase: MusicUseCaseProtocol
+    private let disposeBag = DisposeBag()
 
     enum Action {
         case fetchMusic
@@ -30,19 +31,21 @@ final class HomeViewModel: ViewModelProtocol {
         var error = PublishSubject<AppError>()
     }
 
-    var action: ((Action) -> Void)?
+    let action = PublishSubject<Action>()
     var state = State()
 
     init(musicUseCase: MusicUseCaseProtocol) {
         self.musicUseCase = musicUseCase
+        setBinding()
+    }
 
-        action = {[weak self] action in
-            guard let self else { return }
+    private func setBinding() {
+        action.subscribe {[weak self] action in
             switch action {
             case .fetchMusic:
-                self.fetchMusic()
+                self?.fetchMusic()
             }
-        }
+        }.disposed(by: disposeBag)
     }
 
     private func fetchMusic() {

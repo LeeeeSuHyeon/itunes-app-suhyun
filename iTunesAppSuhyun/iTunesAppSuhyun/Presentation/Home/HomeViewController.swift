@@ -35,6 +35,8 @@ class HomeViewController: UIViewController {
 
         setDataSource()
         bindViewModel()
+
+        homeViewModel.action.onNext(.fetchMusic)
     }
 
     private func setDataSource() {
@@ -100,7 +102,5 @@ class HomeViewController: UIViewController {
             .subscribe(onNext: {[weak self] error in
                 self?.showErrorAlert(error: error)
             }).disposed(by: disposeBag)
-
-        homeViewModel.action?(.fetchMusic)
     }
 }
