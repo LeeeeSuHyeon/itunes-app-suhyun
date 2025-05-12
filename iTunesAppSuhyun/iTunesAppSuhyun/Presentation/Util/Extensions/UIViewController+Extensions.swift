@@ -10,7 +10,7 @@ import UIKit
 extension UIViewController {
     func showErrorAlert(error: AppError) {
         let alert = UIAlertController(
-            title: error.alertType.rawValue,
+            title: error.alertType.alertTitle,
             message: error.errorDescription,
             preferredStyle: .alert
         )

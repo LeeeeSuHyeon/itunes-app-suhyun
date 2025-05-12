@@ -20,14 +20,22 @@ final class MusicRepository: MusicRepositoryProtocol {
         country: String,
         limit: Int
     ) async throws -> [Music] {
-        return try await service
-            .fetchMusic(
-                keyword: keyword,
-                country: country,
-                limit: limit
-            )
-            .results
-            .map { transform(from: $0) }
+        do {
+            return try await service
+                .fetchMusic(
+                    keyword: keyword,
+                    country: country,
+                    limit: limit
+                )
+                .results
+                .map { transform(from: $0) }
+        } catch {
+            if let error = error as? NetworkError {
+                throw AppError.networkError(error)
+            } else {
+                throw AppError.unKnown(error)
+            }
+        }
     }
 
     private func transform(from dto: MusicDTO) -> Music {

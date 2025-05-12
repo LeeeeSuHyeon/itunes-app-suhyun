@@ -58,7 +58,7 @@ final class HomeViewModel: ViewModelProtocol {
                 state.autumnMusic.onNext( try await autumnMusic)
                 state.winterMusic.onNext( try await winterMusic)
             } catch {
-                state.error.onNext(AppError(error))
+                state.error.onNext(error as? AppError ?? AppError.unKnown(error))
             }
         }
     }

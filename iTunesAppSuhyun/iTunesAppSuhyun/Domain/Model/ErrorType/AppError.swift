@@ -13,17 +13,8 @@ protocol AppErrorProtocol: LocalizedError {
 }
 
 enum AppError: AppErrorProtocol {
-    case networkError(NetworkError)
+    case networkError(AppErrorProtocol)
     case unKnown(Error)
-
-    init(_ error: Error) {
-        switch error {
-        case let error as NetworkError:
-            self = .networkError(error)
-        default:
-            self = .unKnown(error)
-        }
-    }
 }
 
 extension AppError {
@@ -47,9 +38,18 @@ extension AppError {
 }
 
 extension AppError {
-    enum AlertType: String {
-        case networkError = "네트워크 오류"
-        case defaultError = "오류"
+    enum AlertType {
+        case networkError
+        case defaultError
+
+        var alertTitle: String {
+            switch self {
+            case .networkError:
+                "네트워크 오류"
+            case .defaultError:
+                "오류"
+            }
+        }
     }
 
     var alertType: AlertType {
