@@ -8,11 +8,10 @@
 import UIKit
 
 final class DIContainer {
-    static let shared = DIContainer()
 
     private let musicUseCase: MusicUseCaseProtocol
 
-    private init() {
+    init() {
         let networkManager = NetworkManager(session: URLSession.shared)
         let itunesNetwork = ITunesNewtork(manager: networkManager)
         let musicRepository = MusicRepository(service: itunesNetwork)
