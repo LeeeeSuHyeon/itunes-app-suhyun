@@ -27,6 +27,21 @@ final class MusicRepository: MusicRepositoryProtocol {
                 limit: limit
             )
             .results
-            .map { $0.toMusic() }
+            .map { transform(from: $0) }
+    }
+
+    private func transform(from dto: MusicDTO) -> Music {
+        let dateFormatter = DateFormatter()
+        let date = dateFormatter.date(from: dto.releaseDate) ?? Date() //TODO: MappingError
+
+        return Music(
+            musicId: dto.musicId,
+            title: dto.title,
+            artist: dto.artist,
+            album: dto.album,
+            imageURL: dto.imageURL,
+            releaseDate: date,
+            durationInSeconds: dto.durationInMillis / 1000
+        )
     }
 }
