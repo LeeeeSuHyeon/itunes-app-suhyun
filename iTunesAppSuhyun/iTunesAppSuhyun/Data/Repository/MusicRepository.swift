@@ -22,10 +22,11 @@ final class MusicRepository: MusicRepositoryProtocol {
     ) async throws -> [Music] {
         do {
             return try await service
-                .fetchMusic(
+                .fetchData(
                     keyword: keyword,
                     country: country,
-                    limit: limit
+                    limit: limit,
+                    media: ITunesMediaType.music.media
                 )
                 .results
                 .map { transform(from: $0) }
