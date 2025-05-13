@@ -38,13 +38,25 @@ final class SearchController: UISearchController {
         bindViewModel()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        self.searchResultView.alpha = 1
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        UIView.animate(withDuration: 0.2) {
+            self.searchResultView.alpha = 0
+            self.searchBar.showsScopeBar = false
+        }
+    }
+
     private func bindView() {
         let tapGesture = searchResultView.titleLabelTapGesture()
 
         tapGesture.rx.event
             .bind { [weak self] _ in
-                //TODO: 배경 천천히 투명해지기 애니메이션 추가
-                self?.dismiss(animated: true)
+                guard let self else { return }
+                self.dismiss(animated: true)
             }.disposed(by: disposeBag)
 
         Observable.combineLatest(searchBar.rx.text.orEmpty, searchBar.rx.selectedScopeButtonIndex)
@@ -82,7 +94,6 @@ final class SearchController: UISearchController {
 }
 
 private extension SearchController {
-
     func configure() {
         self.delegate = self
         self.obscuresBackgroundDuringPresentation = true
@@ -96,10 +107,6 @@ private extension SearchController {
 
 extension SearchController: UISearchControllerDelegate {
     func willPresentSearchController(_ searchController: UISearchController) {
-        self.searchBar.setShowsScope(true, animated: true)
-    }
-
-    func didDismissSearchController(_ searchController: UISearchController) {
-        self.searchBar.setShowsScope(false, animated: true)
+        self.searchBar.showsScopeBar = true
     }
 }
