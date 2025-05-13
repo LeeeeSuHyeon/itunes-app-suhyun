@@ -54,27 +54,20 @@ final class SearchController: UISearchController {
             .distinctUntilChanged({ $0 == $1 })
             .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .bind { [weak self] text, selectedIndex in
-                switch SearchType(rawValue: selectedIndex) {
-                case .movie:
-                    self?.viewModel.action
-                        .onNext(.search(keyword: text))
-                    return
-                case .podcast: //TODO: PodCast 검색
-                    return
-                case .none:
-                    return
-                }
+                guard let type = SearchType(rawValue: selectedIndex) else { return }
+                self?.viewModel.action
+                    .onNext(.search(keyword: text, type: type))
             }.disposed(by: disposeBag)
     }
 
     private func bindViewModel() {
-        viewModel.state.movieResult
+        viewModel.state.searchResult
             .observe(on: MainScheduler.instance)
-            .bind(to: searchResultView.tableView.rx.items) { tableView, row, movieItem in
+            .bind(to: searchResultView.tableView.rx.items) { tableView, row, item in
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultCell.id) as? SearchResultCell else {
                     return UITableViewCell()
                 }
-                cell.configure(with: movieItem, index: row)
+                cell.configure(with: item, index: row)
 
                 return cell
             }.disposed(by: disposeBag)

@@ -28,8 +28,7 @@ final class HomeView: UIView {
             HomeBannerCell.self,
             forCellWithReuseIdentifier: HomeBannerCell.id
         )
-        collectionView
-            .register(
+        collectionView.register(
                 HeaderView.self,
                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                 withReuseIdentifier: HeaderView.id
