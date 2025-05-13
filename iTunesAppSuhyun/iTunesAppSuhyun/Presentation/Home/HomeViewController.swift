@@ -110,7 +110,6 @@ class HomeViewController: UIViewController {
 private extension HomeViewController {
     func setNavigationBar() {
         let searchController = SearchController(searchResultsController: searchResultVC)
-        searchController.searchResultsUpdater = searchResultVC
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
 

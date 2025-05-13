@@ -38,7 +38,9 @@ final class SearchResultViewController: UIViewController {
         viewModel.state.movieResult
             .observe(on: MainScheduler.instance)
             .bind(to: searchResultView.tableView.rx.items) { tableView, row, movieItem in
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultCell.id) as? SearchResultCell else { return UITableViewCell() }
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultCell.id) as? SearchResultCell else {
+                    return UITableViewCell()
+                }
                 cell.configure(with: movieItem, index: row)
                 return cell
             }.disposed(by: disposeBag)
@@ -58,9 +60,8 @@ extension SearchResultViewController: UISearchResultsUpdating {
 
         let selectedIndex = searchController.searchBar.selectedScopeButtonIndex
         switch SearchType(rawValue: selectedIndex) {
-        case .movie: //TODO: Movie 검색
+        case .movie:
             viewModel.action
-//                .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
                 .onNext(.search(keyword: text))
             return
         case .podcast: //TODO: PodCast 검색

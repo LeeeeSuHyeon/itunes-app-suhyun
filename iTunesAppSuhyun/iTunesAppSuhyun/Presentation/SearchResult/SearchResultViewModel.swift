@@ -30,7 +30,9 @@ final class SearchResultViewModel: ViewModelProtocol {
     }
 
     private func setBinding() {
-        action.subscribe {[weak self] action in
+        action
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .subscribe {[weak self] action in
             guard let self else { return }
             switch action {
             case .search(let keyword):
