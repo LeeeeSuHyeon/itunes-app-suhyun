@@ -15,21 +15,16 @@ final class MusicRepository: MusicRepositoryProtocol {
         self.service = service
     }
 
-    func fetchMusic(
-        keyword: String,
-        country: String,
-        limit: Int
-    ) async throws -> [Music] {
+    func fetchMusic(keyword: String, country: String, limit: Int) async throws -> [Music] {
         do {
-            return try await service
-                .fetchData(
+            let result: APIResponse<MusicDTO> = try await service.fetchData(
                     keyword: keyword,
                     country: country,
                     limit: limit,
                     media: ITunesMediaType.music.media
                 )
-                .results
-                .map { transform(from: $0) }
+
+            return transfrom(from: result.results)
         } catch {
             if let error = error as? NetworkError {
                 throw AppError.networkError(error)
@@ -39,18 +34,22 @@ final class MusicRepository: MusicRepositoryProtocol {
         }
     }
 
-    private func transform(from dto: MusicDTO) -> Music {
-        let dateFormatter = DateFormatter()
-        let date = dateFormatter.date(from: dto.releaseDate) ?? Date() //TODO: MappingError
+    private func transfrom(from results: [MusicDTO]) -> [Music] {
+        let dateFormatter = ISO8601DateFormatter()
+        return results.compactMap { (dto: MusicDTO) -> Music? in
+            guard let releaseDate = dateFormatter.date(from: dto.releaseDate) else {
+                return nil
+            }
 
-        return Music(
-            musicId: dto.musicId,
-            title: dto.title,
-            artist: dto.artist,
-            album: dto.album,
-            imageURL: dto.imageURL,
-            releaseDate: date,
-            durationInSeconds: dto.durationInMillis / 1000
-        )
+            return Music(
+                musicId: dto.musicId,
+                title: dto.title,
+                artist: dto.artist,
+                album: dto.album,
+                imageURL: dto.imageURL,
+                releaseDate: releaseDate,
+                durationInSeconds: dto.durationInMillis / 1000
+            )
+        }
     }
 }
