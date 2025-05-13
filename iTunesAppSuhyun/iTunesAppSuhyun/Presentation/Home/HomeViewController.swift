@@ -12,13 +12,15 @@ import RxCocoa
 class HomeViewController: UIViewController {
     private let homeView = HomeView()
     private let homeViewModel: HomeViewModel
+    private let searchResultVC: SearchResultViewController
 
     typealias DataSource = UICollectionViewDiffableDataSource<HomeSection, HomeItem>
     private var dataSource: DataSource?
     private let disposeBag = DisposeBag()
 
-    init(homeViewModel: HomeViewModel) {
+    init(homeViewModel: HomeViewModel, searchResultVC: SearchResultViewController) {
         self.homeViewModel = homeViewModel
+        self.searchResultVC = searchResultVC
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -32,7 +34,7 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setNavigationBar()
         setDataSource()
         bindViewModel()
 
@@ -102,5 +104,18 @@ class HomeViewController: UIViewController {
             .subscribe(onNext: {[weak self] error in
                 self?.showErrorAlert(error: error)
             }).disposed(by: disposeBag)
+    }
+}
+
+private extension HomeViewController {
+    func setNavigationBar() {
+        let searchController = SearchController(searchResultsController: searchResultVC)
+        searchController.searchResultsUpdater = searchResultVC
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+
+        title = "Music"
+        navigationItem.backButtonTitle = title
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
 }

@@ -8,13 +8,6 @@
 import UIKit
 
 final class HomeView: UIView {
-    private let searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.searchBarStyle = .minimal
-        searchBar.placeholder = "영화, 팟캐스트"
-        return searchBar
-    }()
-
     lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(
             frame: .zero,
@@ -73,7 +66,6 @@ private extension HomeView {
         setLayout()
         setHierarchy()
         setConstraints()
-        setAction()
     }
 
     func setLayout() {
@@ -81,24 +73,14 @@ private extension HomeView {
     }
 
     func setHierarchy() {
-        self.addSubviews(searchBar, collectionView)
+        self.addSubviews(collectionView)
     }
 
     func setConstraints() {
-        searchBar.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaLayoutGuide)
-            make.directionalHorizontalEdges.equalToSuperview().inset(12)
-            make.height.equalTo(44)
-        }
-
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom).offset(12)
-            make.leading.bottom.equalToSuperview().inset(16)
-            make.trailing.equalToSuperview()
+            make.top.equalTo(safeAreaLayoutGuide).offset(12)
+            make.leading.equalToSuperview().inset(16)
+            make.trailing.bottom.equalToSuperview()
         }
-    }
-
-    func setAction() {
-
     }
 }
