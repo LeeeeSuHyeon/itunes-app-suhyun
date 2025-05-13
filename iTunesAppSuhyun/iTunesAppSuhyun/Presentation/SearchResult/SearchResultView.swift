@@ -8,13 +8,22 @@
 import UIKit
 
 final class SearchResultView: UIView {
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = .systemFont(ofSize: 28, weight: .bold)
+        label.numberOfLines = 1
+        label.isUserInteractionEnabled = true
+        return label
+    }()
+
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.rowHeight = UIScreen.main.bounds.height * 0.6
+        tableView.sectionHeaderHeight = 60
         tableView.register(SearchResultCell.self, forCellReuseIdentifier: SearchResultCell.id)
-//        tableView.register(<#T##nib: UINib?##UINib?#>, forHeaderFooterViewReuseIdentifier: <#T##String#>)
         return tableView
     }()
 
@@ -26,6 +35,16 @@ final class SearchResultView: UIView {
     @available(*, unavailable, message: "storyboard is not supported.")
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented.")
+    }
+
+    func configure(title: String) {
+        titleLabel.text = title
+    }
+
+    func titleLabelTapGesture() -> UITapGestureRecognizer {
+        let tapGesture = UITapGestureRecognizer()
+        titleLabel.addGestureRecognizer(tapGesture)
+        return tapGesture
     }
 
 }
@@ -42,12 +61,18 @@ private extension SearchResultView {
     }
 
     func setHierarchy() {
-        addSubviews(tableView)
+        addSubviews(titleLabel, tableView)
     }
 
     func setConstraints() {
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(safeAreaLayoutGuide)
+            make.directionalHorizontalEdges.equalToSuperview().inset(12)
+        }
+
         tableView.snp.makeConstraints { make in
-            make.verticalEdges.equalTo(safeAreaLayoutGuide)
+            make.top.equalTo(titleLabel.snp.bottom).offset(12)
+            make.bottom.equalTo(safeAreaLayoutGuide)
             make.directionalHorizontalEdges.equalToSuperview().inset(12)
         }
     }

@@ -23,12 +23,12 @@ final class DIContainer {
 
     func makeHomeViewController() -> HomeViewController {
         let homeViewModel = HomeViewModel(musicUseCase: musicUseCase)
-        let searchResultVC = makeSearchResultViewController()
-        return HomeViewController(homeViewModel: homeViewModel, searchResultVC: searchResultVC)
+        let searchController = makeSearchController()
+        return HomeViewController(homeViewModel: homeViewModel, searchController: searchController)
     }
 
-    func makeSearchResultViewController() -> SearchResultViewController {
+    func makeSearchController() -> SearchController {
         let viewModel = SearchResultViewModel(movieUseCase: movieUseCase)
-        return SearchResultViewController(viewModel: viewModel)
+        return SearchController(viewModel: viewModel)
     }
 }

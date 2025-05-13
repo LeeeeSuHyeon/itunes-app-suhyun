@@ -12,15 +12,15 @@ import RxCocoa
 class HomeViewController: UIViewController {
     private let homeView = HomeView()
     private let homeViewModel: HomeViewModel
-    private let searchResultVC: SearchResultViewController
+    private let searchController: SearchController
 
     typealias DataSource = UICollectionViewDiffableDataSource<HomeSection, HomeItem>
     private var dataSource: DataSource?
     private let disposeBag = DisposeBag()
 
-    init(homeViewModel: HomeViewModel, searchResultVC: SearchResultViewController) {
+    init(homeViewModel: HomeViewModel, searchController: SearchController) {
         self.homeViewModel = homeViewModel
-        self.searchResultVC = searchResultVC
+        self.searchController = searchController
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -109,7 +109,6 @@ class HomeViewController: UIViewController {
 
 private extension HomeViewController {
     func setNavigationBar() {
-        let searchController = SearchController(searchResultsController: searchResultVC)
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
 

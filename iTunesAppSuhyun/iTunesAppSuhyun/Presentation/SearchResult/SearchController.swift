@@ -6,13 +6,20 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import os
 
 final class SearchController: UISearchController {
+    private let searchResultView = SearchResultView()
+    private let viewModel: SearchResultViewModel
+    private let disposeBag = DisposeBag()
 
-    override init(searchResultsController: UIViewController?) {
-        super.init(searchResultsController: searchResultsController)
+    init(viewModel: SearchResultViewModel) {
+        self.viewModel = viewModel
+        super.init(searchResultsController: nil)
 
-        configure(with: searchResultsController)
+        configure()
     }
 
     @available(*, unavailable, message: "storyboard is not supported.")
@@ -20,17 +27,76 @@ final class SearchController: UISearchController {
         fatalError("init(coder:) has not been implemented.")
     }
 
+    override func loadView() {
+        view = searchResultView
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        bindView()
+        bindViewModel()
+    }
+
+    private func bindView() {
+        let tapGesture = searchResultView.titleLabelTapGesture()
+
+        tapGesture.rx.event
+            .bind { [weak self] _ in
+                //TODO: 배경 천천히 투명해지기 애니메이션 추가
+                self?.dismiss(animated: true)
+            }.disposed(by: disposeBag)
+
+        Observable.combineLatest(searchBar.rx.text.orEmpty, searchBar.rx.selectedScopeButtonIndex)
+            .do {[weak self] text, _  in
+                self?.searchResultView.configure(title: text)
+            }
+            .distinctUntilChanged({ $0 == $1 })
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .bind { [weak self] text, selectedIndex in
+                switch SearchType(rawValue: selectedIndex) {
+                case .movie:
+                    self?.viewModel.action
+                        .onNext(.search(keyword: text))
+                    return
+                case .podcast: //TODO: PodCast 검색
+                    return
+                case .none:
+                    return
+                }
+            }.disposed(by: disposeBag)
+    }
+
+    private func bindViewModel() {
+        viewModel.state.movieResult
+            .observe(on: MainScheduler.instance)
+            .bind(to: searchResultView.tableView.rx.items) { tableView, row, movieItem in
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultCell.id) as? SearchResultCell else {
+                    return UITableViewCell()
+                }
+                cell.configure(with: movieItem, index: row)
+
+                return cell
+            }.disposed(by: disposeBag)
+
+        viewModel.state.error
+            .observe(on: MainScheduler.instance)
+            .subscribe {[weak self] error in
+                os_log(.error, "%@", error.debugDescription)
+                self?.showErrorAlert(error: error)
+            }.disposed(by: disposeBag)
+    }
 }
+
 private extension SearchController {
 
-    func configure(with updater: UIViewController?) {
-        self.searchResultsUpdater = updater as? UISearchResultsUpdating
+    func configure() {
+        self.delegate = self
         self.obscuresBackgroundDuringPresentation = true
 
-        let allCasesTitle = SearchType.allCases.map{$0.title}
+        let allCasesTitle = SearchType.allCases.map{ $0.title }
         self.searchBar.placeholder = allCasesTitle.joined(separator: ", ")
         self.searchBar.scopeButtonTitles = allCasesTitle
-        self.delegate = self
     }
 }
 

@@ -31,7 +31,6 @@ final class SearchResultViewModel: ViewModelProtocol {
 
     private func setBinding() {
         action
-            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .subscribe {[weak self] action in
             guard let self else { return }
             switch action {
