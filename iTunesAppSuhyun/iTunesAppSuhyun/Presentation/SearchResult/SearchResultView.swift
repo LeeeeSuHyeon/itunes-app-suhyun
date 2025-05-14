@@ -21,7 +21,7 @@ final class SearchResultView: UIView {
         let tableView = UITableView()
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        tableView.rowHeight = UIScreen.main.bounds.height * 0.6
+        tableView.rowHeight = UIScreen.main.bounds.width * 1.5
         tableView.sectionHeaderHeight = 60
         tableView.register(SearchResultCell.self, forCellReuseIdentifier: SearchResultCell.id)
         return tableView
