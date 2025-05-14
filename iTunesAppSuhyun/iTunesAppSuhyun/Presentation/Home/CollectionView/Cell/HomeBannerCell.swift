@@ -63,7 +63,7 @@ final class HomeBannerCell: UICollectionViewCell {
     func configure(with music: HomeItem.MusicItem) {
         titleLabel.text = music.title
         artistLabel.text = music.artist
-        imageView.setImage(with: music.imageURL)
+        imageView.setImage(with: music.imageURL, toSize: 600)
     }
 }
 

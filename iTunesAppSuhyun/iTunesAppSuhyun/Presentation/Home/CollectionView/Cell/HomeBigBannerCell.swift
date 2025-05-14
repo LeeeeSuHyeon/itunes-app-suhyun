@@ -82,7 +82,7 @@ final class HomeBigBannerCell: UICollectionViewCell {
         titleLabel.text = music.title
         artistLabel.text = music.artist
         replayTimeLabel.text = music.durationInSeconds.toReplayTime()
-        imageView.setImage(with: music.imageURL)
+        imageView.setImage(with: music.imageURL, toSize: 600)
     }
 }
 

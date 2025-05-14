@@ -76,7 +76,7 @@ final class SearchResultCell: UITableViewCell {
         titleLabel.text = searchResult.title
         genreLabel.text = searchResult.genre
         releaseDateLabel.text = searchResult.releaseDate.toReleaseDateFormmat()
-        posterImageView.setImage(with: searchResult.imageURL)
+        posterImageView.setImage(with: searchResult.imageURL, toSize: 600)
         self.contentView.backgroundColor = colors[index % colors.count]
     }
 }
