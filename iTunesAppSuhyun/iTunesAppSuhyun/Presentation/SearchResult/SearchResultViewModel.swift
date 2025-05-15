@@ -37,10 +37,10 @@ final class SearchResultViewModel: ViewModelProtocol {
         self.movieUseCase = movieUseCase
         self.podcastUseCase = podcastUseCase
 
-        setBinding()
+        bindAction()
     }
 
-    private func setBinding() {
+    private func bindAction() {
         action
             .subscribe {[weak self] action in
                 guard let self else { return }
@@ -55,29 +55,27 @@ final class SearchResultViewModel: ViewModelProtocol {
 
     private func fetchData(keyword: String, type: SearchType) {
         Task {
-            async let completeFetchMovie: () = fetchMovie(keyword: keyword)
-            async let completeFetchPodcast: () = fetchPodcast(keyword: keyword)
-            _ = await (completeFetchMovie, completeFetchPodcast)
-            changedType(type: type)
+            async let movieData = fetchMovie(keyword: keyword)
+            async let podcastData = fetchPodcast(keyword: keyword)
+
+            do {
+                (movieResult, podcastResult) = try await (movieData, podcastData)
+                changedType(type: type)
+            } catch {
+                handleError(error)
+            }
         }
     }
 
-    private func fetchMovie(keyword: String) async {
-        do {
-            let result = try await movieUseCase.fetchMovie(keyword: keyword)
-            movieResult = result.map{ SearchResult(movie: $0) }
-        } catch {
-            handleError(error)
-        }
+    private func fetchMovie(keyword: String) async throws -> [SearchResult] {
+        return try await movieUseCase.fetchMovie(keyword: keyword)
+            .map{ SearchResult(mediaInfo: $0.mediaInfo) }
+
     }
 
-    private func fetchPodcast(keyword: String) async {
-        do {
-            let result = try await podcastUseCase.fetchPodcast(keyword: keyword)
-            podcastResult = result.map{ SearchResult(podcast: $0) }
-        } catch {
-            handleError(error)
-        }
+    private func fetchPodcast(keyword: String) async throws -> [SearchResult] {
+        return try await podcastUseCase.fetchPodcast(keyword: keyword)
+            .map{ SearchResult(mediaInfo: $0.mediaInfo) }
     }
 
     private func changedType(type: SearchType) {

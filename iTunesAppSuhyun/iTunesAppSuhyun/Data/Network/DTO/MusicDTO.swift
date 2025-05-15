@@ -12,6 +12,7 @@ struct MusicDTO: Decodable {
     let title: String
     let artist: String
     let album: String
+    let genre: String
     let imageURL: String
     let releaseDate: String
     let durationInMillis: Int
@@ -21,6 +22,7 @@ struct MusicDTO: Decodable {
         case title = "trackName"
         case artist = "artistName"
         case album = "collectionName"
+        case genre = "primaryGenreName"
         case imageURL = "artworkUrl100"
         case releaseDate
         case durationInMillis = "trackTimeMillis"
@@ -32,6 +34,7 @@ struct MusicDTO: Decodable {
         self.title = try container.decode(String.self, forKey: .title)
         self.artist = try container.decode(String.self, forKey: .artist)
         self.album = try container.decodeIfPresent(String.self, forKey: .album) ?? "Unknown Album"
+        self.genre = try container.decode(String.self, forKey: .genre)
         self.imageURL = try container.decode(String.self, forKey: .imageURL)
         self.releaseDate = try container.decode(String.self, forKey: .releaseDate)
         self.durationInMillis = try container.decodeIfPresent(Int.self, forKey: .durationInMillis) ?? 0
@@ -42,6 +45,7 @@ struct MusicDTO: Decodable {
         title: String,
         artist: String,
         album: String,
+        genre: String,
         imageURL: String,
         releaseDate: String,
         durationInMillis: Int
@@ -50,6 +54,7 @@ struct MusicDTO: Decodable {
         self.title = title
         self.artist = artist
         self.album = album
+        self.genre = genre
         self.imageURL = imageURL
         self.releaseDate = releaseDate
         self.durationInMillis = durationInMillis

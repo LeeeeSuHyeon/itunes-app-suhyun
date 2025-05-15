@@ -33,22 +33,21 @@ final class MovieRepository: MovieRepositoryProtocol {
     }
 
     private func transfrom(from results: [MovieDTO]) -> [Movie] {
-        let dateFormatter = ISO8601DateFormatter()
         return results.compactMap { (dto: MovieDTO) -> Movie? in
-            guard let releaseDate = dateFormatter.date(from: dto.releaseDate) else {
-                return nil
-            }
-
-            return Movie(
-                movieId: dto.movieId,
+            guard let date = Date(iso8601String: dto.releaseDate) else{ return nil }
+            let mediaInfo = MediaInfo(
+                id: dto.movieId,
                 title: dto.title,
-                director: dto.director,
-                posterURL: dto.posterURL,
-                price: dto.price,
+                artist: dto.artist,
+                imageURL: dto.imageURL,
                 genre: dto.genre,
+                releaseDate: date
+            )
+            return Movie(
+                mediaInfo: mediaInfo,
                 contentAdvisoryRating: dto.contentAdvisoryRating,
-                description: dto.description,
-                releaseDate: releaseDate
+                price: dto.price,
+                description: dto.description
             )
         }
     }

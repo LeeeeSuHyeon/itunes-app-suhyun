@@ -10,8 +10,8 @@ import Foundation
 struct MovieDTO: Decodable {
     let movieId: Int
     let title: String
-    let director: String
-    let posterURL: String
+    let artist: String
+    let imageURL: String
     let price: Double
     let genre: String
     let contentAdvisoryRating: String
@@ -21,8 +21,8 @@ struct MovieDTO: Decodable {
     enum CodingKeys: String, CodingKey {
         case movieId = "trackId"
         case title = "trackName"
-        case director = "artistName"
-        case posterURL = "artworkUrl100"
+        case artist = "artistName"
+        case imageURL = "artworkUrl100"
         case price = "trackPrice"
         case genre = "primaryGenreName"
         case contentAdvisoryRating = "contentAdvisoryRating"

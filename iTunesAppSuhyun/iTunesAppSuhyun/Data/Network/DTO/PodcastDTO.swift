@@ -12,7 +12,7 @@ struct PodcastDTO: Decodable {
     let title: String
     let artist: String
     let imageURL: String
-    let primaryGenre: String
+    let genre: String
     let releaseDate: String
 
     enum CodingKeys: String, CodingKey {
@@ -20,7 +20,7 @@ struct PodcastDTO: Decodable {
         case title = "trackName"
         case artist = "artistName"
         case imageURL = "artworkUrl600"
-        case primaryGenre = "primaryGenreName"
+        case genre = "primaryGenreName"
         case releaseDate
     }
 }

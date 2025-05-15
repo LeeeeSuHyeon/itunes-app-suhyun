@@ -224,12 +224,12 @@ enum HomeItem: Hashable {
 extension HomeItem.MusicItem {
     init(from music: Music) {
         self.init(
-            musicId: music.musicId,
-            title: music.title,
-            artist: music.artist,
+            musicId: music.mediaInfo.id,
+            title: music.mediaInfo.title,
+            artist: music.mediaInfo.artist,
             album: music.album,
-            imageURL: music.imageURL,
-            releaseDate: music.releaseDate,
+            imageURL: music.mediaInfo.imageURL,
+            releaseDate: music.mediaInfo.releaseDate,
             durationInSeconds: music.durationInSeconds
         )
     }

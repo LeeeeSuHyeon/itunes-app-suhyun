@@ -8,25 +8,24 @@
 import Foundation
 
 struct SearchResult {
-    let id: Int
-    let title: String
-    let releaseDate: Date
-    let genre: String
-    let imageURL: String
+    let mediaInfo: MediaInfo
 
-    init(movie: Movie) {
-        self.id = movie.movieId
-        self.title = movie.title
-        self.releaseDate = movie.releaseDate
-        self.genre = movie.genre
-        self.imageURL = movie.posterURL
+    init(mediaInfo: MediaInfo) {
+        self.mediaInfo = mediaInfo
     }
-
-    init(podcast: Podcast) {
-        self.id = podcast.podcastId
-        self.title = podcast.title
-        self.releaseDate = podcast.releaseDate
-        self.genre = podcast.primaryGenre
-        self.imageURL = podcast.imageURL
-    }
+//    init(movie: Movie) {
+//        self.id = movie.mediaInfo.id
+//        self.title = movie.mediaInfo.title
+//        self.releaseDate = movie.mediaInfo.releaseDate
+//        self.genre = movie.mediaInfo.genre
+//        self.imageURL = movie.mediaInfo.imageURL
+//    }
+//
+//    init(podcast: Podcast) {
+//        self.id = podcast.podcastId
+//        self.title = podcast.title
+//        self.releaseDate = podcast.releaseDate
+//        self.genre = podcast.primaryGenre
+//        self.imageURL = podcast.imageURL
+//    }
 }
