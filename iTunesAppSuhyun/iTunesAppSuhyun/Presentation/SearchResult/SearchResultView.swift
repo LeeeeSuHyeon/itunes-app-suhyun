@@ -23,6 +23,7 @@ final class SearchResultView: UIView {
         tableView.showsVerticalScrollIndicator = false
         tableView.rowHeight = UIScreen.main.bounds.width * 1.5
         tableView.sectionHeaderHeight = 60
+        tableView.keyboardDismissMode = .onDrag
         tableView.register(SearchResultCell.self, forCellReuseIdentifier: SearchResultCell.id)
         return tableView
     }()
