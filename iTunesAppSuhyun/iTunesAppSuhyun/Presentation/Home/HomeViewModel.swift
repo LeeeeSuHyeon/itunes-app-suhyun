@@ -11,55 +11,73 @@ protocol ViewModelProtocol {
     associatedtype Action
     associatedtype State
 
-    var action: ((Action) -> Void)? { get }
+    var action: PublishSubject<Action> { get }
     var state: State { get }
 }
 
 final class HomeViewModel: ViewModelProtocol {
     private let musicUseCase: MusicUseCaseProtocol
+    private let disposeBag = DisposeBag()
 
     enum Action {
         case fetchMusic
     }
 
     struct State {
-        var springMusic = BehaviorSubject<[Music]>(value: [])
-        var summerMusic = BehaviorSubject<[Music]>(value: [])
-        var autumnMusic = BehaviorSubject<[Music]>(value: [])
-        var winterMusic = BehaviorSubject<[Music]>(value: [])
+        var springItem = PublishSubject<[HomeItem]>()
+        var summerItem = PublishSubject<[HomeItem]>()
+        var autumnItem = PublishSubject<[HomeItem]>()
+        var winterItem = PublishSubject<[HomeItem]>()
         var error = PublishSubject<AppError>()
     }
 
-    var action: ((Action) -> Void)?
+    let action = PublishSubject<Action>()
     var state = State()
 
     init(musicUseCase: MusicUseCaseProtocol) {
         self.musicUseCase = musicUseCase
+        setBinding()
+    }
 
-        action = {[weak self] action in
-            guard let self else { return }
+    private func setBinding() {
+        action.subscribe {[weak self] action in
             switch action {
             case .fetchMusic:
-                self.fetchMusic()
+                self?.fetchMusic()
             }
-        }
+        }.disposed(by: disposeBag)
     }
 
     private func fetchMusic() {
         Task {
-            async let springMusic = musicUseCase.fetchMusic(keyword: "봄")
-            async let summerMusic = musicUseCase.fetchMusic(keyword: "여름", limit: 30)
-            async let autumnMusic = musicUseCase.fetchMusic(keyword: "가을", limit: 30)
-            async let winterMusic = musicUseCase.fetchMusic(keyword: "겨울", limit: 15)
-
             do {
-                state.springMusic.onNext( try await springMusic)
-                state.summerMusic.onNext( try await summerMusic)
-                state.autumnMusic.onNext( try await autumnMusic)
-                state.winterMusic.onNext( try await winterMusic)
+                try await withThrowingTaskGroup(of: (HomeSection, [Music]).self) {[weak self] group in
+                    guard let self else { return }
+
+                    HomeSection.allCases.forEach { section in
+                        group.addTask {
+                            let musics = try await self.musicUseCase.fetchMusic(keyword: section.keyword, limit: section.limit)
+                            return (section, musics)
+                        }
+                    }
+
+                    for try await (section, musics) in group {
+                        let items = musics.map { section.createItem(from: $0) }
+                        getSubject(for: section).onNext(items)
+                    }
+                }
             } catch {
-                state.error.onNext(AppError(error))
+                state.error.onNext(error as? AppError ?? AppError.unKnown(error))
             }
+        }
+    }
+
+    private func getSubject(for section: HomeSection) -> PublishSubject<[HomeItem]> {
+        switch section {
+        case .spring: return state.springItem
+        case .summer: return state.summerItem
+        case .autumn: return state.autumnItem
+        case .winter: return state.winterItem
         }
     }
 }

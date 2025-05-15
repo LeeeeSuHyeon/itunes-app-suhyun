@@ -78,11 +78,11 @@ final class HomeBigBannerCell: UICollectionViewCell {
         imageView.image = nil
     }
 
-    func configure(with music: Music) {
+    func configure(with music: HomeItem.MusicItem) {
         titleLabel.text = music.title
         artistLabel.text = music.artist
         replayTimeLabel.text = music.durationInSeconds.toReplayTime()
-        imageView.setImage(with: music.imageURL)
+        imageView.setImage(with: music.imageURL, toSize: 600)
     }
 }
 

@@ -8,11 +8,12 @@
 import Foundation
 
 protocol ITunesNetworkProtocol {
-    func fetchMusic(
+    func fetchData<T: Decodable>(
         keyword: String,
         country: String,
-        limit: Int
-    ) async throws -> APIResponse<MusicDTO>
+        limit: Int,
+        media: String
+    ) async throws -> APIResponse<T>
 }
 
 final class ITunesNewtork: ITunesNetworkProtocol {
@@ -23,22 +24,23 @@ final class ITunesNewtork: ITunesNetworkProtocol {
         self.manager = manager
     }
 
-    func fetchMusic(
+    func fetchData<T: Decodable>(
         keyword: String,
         country: String,
-        limit: Int = 10
-    ) async throws -> APIResponse<MusicDTO> {
+        limit: Int,
+        media: String
+    ) async throws -> APIResponse<T> {
         var components = URLComponents(string: baseURL)
         components?.queryItems = [
             URLQueryItem(name: "term", value: keyword),
             URLQueryItem(name: "country", value: country),
             URLQueryItem(name: "limit", value: "\(limit)"),
             URLQueryItem(name: "lang", value: "ko_KR"),
-            URLQueryItem(name: "media", value: "music"),
+            URLQueryItem(name: "media", value: media),
         ]
 
         guard let url = components?.url else {
-            throw NetworkError.invalidURL("\(baseURL) - music")
+            throw NetworkError.invalidURL("\(baseURL) - \(media)")
         }
 
         return try await manager.fetchData(url: url)

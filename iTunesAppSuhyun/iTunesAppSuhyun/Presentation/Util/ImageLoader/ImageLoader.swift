@@ -54,7 +54,11 @@ final class ImageLoader {
                 await expiryStore.setExpiryDate(date: Date().addingTimeInterval(ttl), for: urlString)
                 return image
             } catch {
-                os_log("[ImageLoader]: 이미지 다운로드 실패", type: .fault)
+                os_log(
+                    "[ImageLoader]: 이미지 다운로드 실패: %@",
+                    type: .fault,
+                    error.localizedDescription
+                )
                 return nil
             }
         }

@@ -8,9 +8,15 @@
 import UIKit
 
 extension UIImageView {
-    func setImage(with urlString: String) {
+    func setImage(with urlString: String, toSize size: Int? = nil) {
+        var imagePath = urlString
+        if let size,
+           let replacedImagePath = urlString.replaceImageURL(toSize: size) {
+            imagePath = replacedImagePath
+        }
+
         Task {
-            let image = await ImageLoader.shared.loadImage(with: urlString)
+            let image = await ImageLoader.shared.loadImage(with: imagePath)
             await MainActor.run {
                 self.image = image
             }
