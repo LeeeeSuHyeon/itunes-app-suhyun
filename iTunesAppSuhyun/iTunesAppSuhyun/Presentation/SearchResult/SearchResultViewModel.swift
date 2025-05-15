@@ -11,6 +11,7 @@ final class SearchResultViewModel: ViewModelProtocol {
 
     enum Action {
         case search(keyword: String, type: SearchType)
+        case changedType(type: SearchType)
     }
 
     struct State {
@@ -20,6 +21,9 @@ final class SearchResultViewModel: ViewModelProtocol {
 
     private let movieUseCase: MovieUseCaseProtocol
     private let podcastUseCase: PodcastUseCaseProtocol
+
+    private var movieResult = [SearchResult]()
+    private var podcastResult = [SearchResult]()
 
     private let disposeBag = DisposeBag()
 
@@ -39,50 +43,57 @@ final class SearchResultViewModel: ViewModelProtocol {
     private func setBinding() {
         action
             .subscribe {[weak self] action in
-            guard let self else { return }
-            switch action {
-            case .search(let keyword, let type):
-                self.fetchData(keyword: keyword, type: type)
-            }
-        }.disposed(by: disposeBag)
+                guard let self else { return }
+                switch action {
+                case .search(let keyword, let type):
+                    self.fetchData(keyword: keyword, type: type)
+                case .changedType(let type):
+                    self.changedType(type: type)
+                }
+            }.disposed(by: disposeBag)
     }
 
     private func fetchData(keyword: String, type: SearchType) {
+        Task {
+            async let completeFetchMovie: () = fetchMovie(keyword: keyword)
+            async let completeFetchPodcast: () = fetchPodcast(keyword: keyword)
+            _ = await (completeFetchMovie, completeFetchPodcast)
+            changedType(type: type)
+        }
+    }
+
+    private func fetchMovie(keyword: String) async {
+        do {
+            let result = try await movieUseCase.fetchMovie(keyword: keyword)
+            movieResult = result.map{ SearchResult(movie: $0) }
+        } catch {
+            handleError(error)
+        }
+    }
+
+    private func fetchPodcast(keyword: String) async {
+        do {
+            let result = try await podcastUseCase.fetchPodcast(keyword: keyword)
+            podcastResult = result.map{ SearchResult(podcast: $0) }
+        } catch {
+            handleError(error)
+        }
+    }
+
+    private func changedType(type: SearchType) {
         switch type {
         case .movie:
-            fetchMovie(keyword: keyword)
+            state.searchResult.onNext(movieResult)
         case .podcast:
-            fetchPodcast(keyword: keyword)
+            state.searchResult.onNext(podcastResult)
         }
     }
 
-    private func fetchMovie(keyword: String) {
-        Task {
-            do {
-                let result = try await movieUseCase.fetchMovie(keyword: keyword)
-                state.searchResult.onNext(result.map{ SearchResult(movie: $0) })
-            } catch {
-                if let error = error as? AppError {
-                    state.error.onNext(error)
-                } else {
-                    state.error.onNext(AppError.unKnown(error))
-                }
-            }
-        }
-    }
-
-    private func fetchPodcast(keyword: String) {
-        Task {
-            do {
-                let result = try await podcastUseCase.fetchPodcast(keyword: keyword)
-                state.searchResult.onNext(result.map{ SearchResult(podcast: $0) })
-            } catch {
-                if let error = error as? AppError {
-                    state.error.onNext(error)
-                } else {
-                    state.error.onNext(AppError.unKnown(error))
-                }
-            }
+    private func handleError(_ error: Error) {
+        if let error = error as? AppError {
+            state.error.onNext(error)
+        } else {
+            state.error.onNext(AppError.unKnown(error))
         }
     }
 }

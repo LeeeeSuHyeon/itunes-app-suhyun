@@ -59,16 +59,28 @@ final class SearchController: UISearchController {
                 self.dismiss(animated: true)
             }.disposed(by: disposeBag)
 
-        Observable.combineLatest(searchBar.rx.text.orEmpty, searchBar.rx.selectedScopeButtonIndex)
-            .do {[weak self] text, _  in
+
+        searchBar.rx.text.orEmpty
+            .filter { !$0.isEmpty }
+            .do {[weak self] text in
                 self?.searchResultView.configure(title: text)
             }
             .distinctUntilChanged({ $0 == $1 })
             .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
-            .bind { [weak self] text, selectedIndex in
-                guard let type = SearchType(rawValue: selectedIndex) else { return }
+            .withLatestFrom(searchBar.rx.selectedScopeButtonIndex) { text, index in
+                guard let type = SearchType(rawValue: index) else { return (text, .movie) }
+                return (text, type)
+            }
+            .bind { [weak self] text, type in
                 self?.viewModel.action
                     .onNext(.search(keyword: text, type: type))
+            }.disposed(by: disposeBag)
+
+        searchBar.rx.selectedScopeButtonIndex
+            .bind {[weak self] selectedIndex in
+                guard let type = SearchType(rawValue: selectedIndex) else { return }
+                self?.viewModel.action
+                    .onNext(.changedType(type: type))
             }.disposed(by: disposeBag)
 
         self.rx.willPresent
@@ -100,7 +112,6 @@ final class SearchController: UISearchController {
 
 private extension SearchController {
     func configure() {
-//        self.delegate = self
         self.obscuresBackgroundDuringPresentation = true
 
         let allCasesTitle = SearchType.allCases.map{ $0.title }
@@ -108,10 +119,3 @@ private extension SearchController {
         self.searchBar.scopeButtonTitles = allCasesTitle
     }
 }
-
-
-//extension SearchController: UISearchControllerDelegate {
-//    func willPresentSearchController(_ searchController: UISearchController) {
-//        self.searchBar.showsScopeBar = true
-//    }
-//}
