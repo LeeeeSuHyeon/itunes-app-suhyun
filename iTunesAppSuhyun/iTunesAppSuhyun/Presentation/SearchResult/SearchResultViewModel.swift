@@ -27,8 +27,8 @@ final class SearchResultViewModel: ViewModelProtocol {
 
     private let disposeBag = DisposeBag()
 
-    var action = PublishSubject<Action>()
-    var state: State = State()
+    let action = PublishSubject<Action>()
+    fileprivate(set) var state: State = State()
 
     init(
         movieUseCase: MovieUseCaseProtocol,
