@@ -70,6 +70,11 @@ final class SearchController: UISearchController {
                 self?.viewModel.action
                     .onNext(.search(keyword: text, type: type))
             }.disposed(by: disposeBag)
+
+        self.rx.willPresent
+            .bind {[weak self] in
+                self?.searchBar.showsScopeBar = true
+            }.disposed(by: disposeBag)
     }
 
     private func bindViewModel() {
@@ -95,7 +100,7 @@ final class SearchController: UISearchController {
 
 private extension SearchController {
     func configure() {
-        self.delegate = self
+//        self.delegate = self
         self.obscuresBackgroundDuringPresentation = true
 
         let allCasesTitle = SearchType.allCases.map{ $0.title }
@@ -105,8 +110,8 @@ private extension SearchController {
 }
 
 
-extension SearchController: UISearchControllerDelegate {
-    func willPresentSearchController(_ searchController: UISearchController) {
-        self.searchBar.showsScopeBar = true
-    }
-}
+//extension SearchController: UISearchControllerDelegate {
+//    func willPresentSearchController(_ searchController: UISearchController) {
+//        self.searchBar.showsScopeBar = true
+//    }
+//}
