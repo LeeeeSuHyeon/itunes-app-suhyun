@@ -42,7 +42,7 @@ final class PosterView: UIView {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 8
-        stackView.backgroundColor = .black.withAlphaComponent(0.3)
+        stackView.backgroundColor = .black.withAlphaComponent(0.4)
         stackView.layoutMargins = .init(top: 8, left: 16, bottom: 8, right: 8)
         stackView.isLayoutMarginsRelativeArrangement = true
         return stackView
@@ -110,8 +110,7 @@ private extension PosterView {
 
     func setConstraints() {
         mediaLabel.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaLayoutGuide)
-            make.directionalHorizontalEdges.equalToSuperview()
+            make.top.directionalHorizontalEdges.equalToSuperview()
             make.height.equalTo(44)
         }
 

@@ -10,11 +10,11 @@ import RxCocoa
 import RxSwift
 
 final class MusicDetailViewController: UIViewController {
-    private let detailView: MusicDetailView
+    private let detailView: DetailView
     private let disposeBag = DisposeBag()
 
     init(music: Music) {
-        detailView = MusicDetailView(music: music)
+        detailView = DetailView(music: music)
         super.init(nibName: nil, bundle: nil)
     }
     

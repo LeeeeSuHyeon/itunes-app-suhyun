@@ -1,5 +1,5 @@
 //
-//  MusicDetailView.swift
+//  DetailInfoView.swift
 //  iTunesAppSuhyun
 //
 //  Created by 이수현 on 5/15/25.
@@ -7,12 +7,7 @@
 
 import UIKit
 
-final class MusicDetailView: UIView {
-    private let posterView: PosterView
-
-    var dismissButton: UIButton {
-        posterView.getDismissButton()
-    }
+final class DetailInfoView: UIView {
 
     private let horizontalInfoStackView: UIStackView = {
         let stackView = UIStackView()
@@ -44,7 +39,7 @@ final class MusicDetailView: UIView {
         return label
     }()
 
-    private let albumLabel: UILabel = {
+    private let subTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = .systemFont(ofSize: 16)
@@ -76,10 +71,21 @@ final class MusicDetailView: UIView {
     }()
 
     init(music: Music) {
-        self.posterView = PosterView(mediaInfo: music.mediaInfo, type: .music)
         super.init(frame: .zero)
         configure()
         configure(music: music)
+    }
+
+    init(movie: Movie) {
+        super.init(frame: .zero)
+        configure()
+        configure(movie: movie)
+    }
+
+    init(podcast: Podcast) {
+        super.init(frame: .zero)
+        configure()
+        configure(podcast: podcast)
     }
 
     @available(*, unavailable, message: "storyboard is not supported.")
@@ -90,13 +96,29 @@ final class MusicDetailView: UIView {
     func configure(music: Music) {
         titleLabel.text = music.mediaInfo.title
         imageView.setImage(with: music.mediaInfo.imageURL, toSize: 100)
-        albumLabel.text = music.album
+        subTitleLabel.text = music.album
         releaseDateLabel.text = music.mediaInfo.releaseDate.toReleaseDateFormmat()
         replayTimeLabel.text = music.durationInSeconds.toReplayTime()
     }
+
+    func configure(movie: Movie) {
+        titleLabel.text = movie.mediaInfo.title
+        imageView.setImage(with: movie.mediaInfo.imageURL, toSize: 100)
+        subTitleLabel.text = movie.contentAdvisoryRating
+        releaseDateLabel.text = movie.mediaInfo.releaseDate.toReleaseDateFormmat()
+//        replayTimeLabel.text = movie.durationInSeconds.toReplayTime()
+    }
+
+    func configure(podcast: Podcast) {
+        titleLabel.text = podcast.mediaInfo.title
+        imageView.setImage(with: podcast.mediaInfo.imageURL, toSize: 100)
+        subTitleLabel.text = podcast.mediaInfo.artist
+        releaseDateLabel.text = podcast.mediaInfo.releaseDate.toReleaseDateFormmat()
+//        replayTimeLabel.text = movie.durationInSeconds.toReplayTime()
+    }
 }
 
-private extension MusicDetailView {
+private extension DetailInfoView {
 
     func configure() {
         setLayout()
@@ -109,21 +131,15 @@ private extension MusicDetailView {
     }
 
     func setHierarchy() {
-        self.addSubviews(posterView, horizontalInfoStackView)
+        self.addSubviews(horizontalInfoStackView)
         horizontalInfoStackView.addArrangedSubviews(imageView, verticalInfoStackView)
-        verticalInfoStackView.addArrangedSubviews(titleLabel, albumLabel, etcInfoStackView)
+        verticalInfoStackView.addArrangedSubviews(titleLabel, subTitleLabel, etcInfoStackView)
         etcInfoStackView.addArrangedSubviews(releaseDateLabel, replayTimeLabel)
     }
 
     func setConstraints() {
-        posterView.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaLayoutGuide)
-            make.directionalHorizontalEdges.equalToSuperview()
-        }
-
         horizontalInfoStackView.snp.makeConstraints { make in
-            make.top.equalTo(posterView.snp.bottom).offset(16)
-            make.directionalHorizontalEdges.equalToSuperview().inset(16)
+            make.top.directionalHorizontalEdges.equalToSuperview()
         }
 
         imageView.snp.makeConstraints { make in
