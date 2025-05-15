@@ -178,7 +178,7 @@ extension HomeSection {
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(0.45),
-            heightDimension: .estimated(210)
+            heightDimension: .fractionalWidth(0.55)
         )
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,
