@@ -210,11 +210,19 @@ enum HomeItem: Hashable {
     case autumn(MusicItem)
     case winter(MusicItem)
 
+    var music: Music {
+        switch self {
+        case .spring(let musicItem), .summer(let musicItem), .autumn(let musicItem), .winter(let musicItem):
+            return musicItem.toMusic()
+        }
+    }
+
     struct MusicItem: Hashable {
         let musicId: Int
         let title: String
         let artist: String
         let album: String
+        let genre: String
         let imageURL: String
         let releaseDate: Date
         let durationInSeconds: Int
@@ -228,9 +236,25 @@ extension HomeItem.MusicItem {
             title: music.mediaInfo.title,
             artist: music.mediaInfo.artist,
             album: music.album,
+            genre: music.mediaInfo.genre,
             imageURL: music.mediaInfo.imageURL,
             releaseDate: music.mediaInfo.releaseDate,
             durationInSeconds: music.durationInSeconds
+        )
+    }
+
+    func toMusic() -> Music {
+        return Music(
+            mediaInfo: MediaInfo(
+                id: musicId,
+                title: title,
+                artist: artist,
+                imageURL: imageURL,
+                genre: genre,
+                releaseDate: releaseDate
+            ),
+            album: album,
+            durationInSeconds: durationInSeconds
         )
     }
 }
