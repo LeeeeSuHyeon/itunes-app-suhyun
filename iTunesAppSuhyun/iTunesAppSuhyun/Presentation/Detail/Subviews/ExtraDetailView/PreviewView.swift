@@ -9,6 +9,12 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+// Preview 객체를 존재하는 View에서 채택 (MovieDetailView, PodcastDetailView)
+protocol PreviewProvider {
+    var previewView: PreviewView { get }
+}
+
+// Preview 재생 딜리게이트
 protocol PreviewViewDelegate: AnyObject {
     func didTapPlayButton(_ previewURLString: String)
 }

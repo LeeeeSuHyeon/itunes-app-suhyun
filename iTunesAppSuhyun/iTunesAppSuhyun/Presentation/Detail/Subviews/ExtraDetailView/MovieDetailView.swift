@@ -7,7 +7,9 @@
 
 import UIKit
 
-final class MovieDetailView: UIStackView {
+final class MovieDetailView: UIStackView, PreviewProvider {
+    let previewView: PreviewView
+
     private let priceStacKView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -53,8 +55,6 @@ final class MovieDetailView: UIStackView {
         return label
     }()
 
-    let previewView: PreviewView
-
     init(info: MovieExtraInfo) {
         self.previewView = PreviewView(info: info)
         super.init(frame: .zero)
@@ -70,10 +70,6 @@ final class MovieDetailView: UIStackView {
     private func configure(with info: MovieExtraInfo) {
         self.priceInfoLabel.text = Int(info.price).toKRW()
         self.descriptionInfoLabel.text = info.description
-    }
-
-    func setPreviewDeleate(_ delegate: PreviewViewDelegate) {
-        previewView.setPreviewDeleate(delegate)
     }
 }
 

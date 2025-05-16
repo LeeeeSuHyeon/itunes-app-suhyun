@@ -66,7 +66,7 @@ final class DetailView: UIView {
     }
 
     func setPreviewDelegate(_ delegate: PreviewViewDelegate) {
-        (extraInfoView as? MovieDetailView)?.setPreviewDeleate(delegate)
+        (extraInfoView as? PreviewProvider)?.previewView.setPreviewDeleate(delegate)
     }
 }
 
