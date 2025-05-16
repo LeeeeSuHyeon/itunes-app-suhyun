@@ -48,7 +48,8 @@ final class MovieRepository: MovieRepositoryProtocol {
                 mediaInfo: mediaInfo,
                 contentAdvisoryRating: dto.contentAdvisoryRating,
                 price: dto.price,
-                description: dto.description
+                description: dto.description,
+                previewURL: dto.previewURL
             )
         }
     }

@@ -12,4 +12,5 @@ struct Movie {
     let contentAdvisoryRating: String
     let price: Double
     let description: String
+    let previewURL: String
 }
