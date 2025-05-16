@@ -83,6 +83,35 @@ final class SearchController: UISearchController {
                     .onNext(.changedType(type: type))
             }.disposed(by: disposeBag)
 
+        searchResultView.tableView.rx.itemSelected
+            .withLatestFrom(
+                Observable.combineLatest(
+                    viewModel.state.moiveResult,
+                    viewModel.state.podcastResult,
+                    resultSelector: { movies, podcasts in
+                        return (movies: movies, podcasts: podcasts)
+                    })
+                , resultSelector: { return ($0, $1) }
+            )
+            .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
+            .bind { [weak self] indexPath, items in
+                guard let self else { return }
+                var detailVC: DetailViewController?
+                switch SearchType(rawValue: searchBar.selectedScopeButtonIndex) {
+                case .movie:
+                    let item = items.movies[indexPath.row]
+                    detailVC = DetailViewController(info: DetailInfo(item))
+                case .podcast:
+                    let item = items.podcasts[indexPath.row]
+                    detailVC = DetailViewController(info: DetailInfo(item))
+                case .none:
+                    return
+                }
+                guard let detailVC else { return }
+                detailVC.modalPresentationStyle = .fullScreen
+                self.present(detailVC, animated: true)
+            }.disposed(by: disposeBag)
+
         self.rx.willPresent
             .bind {[weak self] in
                 self?.searchBar.showsScopeBar = true

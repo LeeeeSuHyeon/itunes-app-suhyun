@@ -239,7 +239,7 @@ extension HomeItem.MusicItem {
             genre: music.mediaInfo.genre,
             imageURL: music.mediaInfo.imageURL,
             releaseDate: music.mediaInfo.releaseDate,
-            durationInSeconds: music.durationInSeconds
+            durationInSeconds: music.mediaInfo.durationInSeconds
         )
     }
 
@@ -251,10 +251,10 @@ extension HomeItem.MusicItem {
                 artist: artist,
                 imageURL: imageURL,
                 genre: genre,
-                releaseDate: releaseDate
+                releaseDate: releaseDate,
+                durationInSeconds: durationInSeconds
             ),
-            album: album,
-            durationInSeconds: durationInSeconds
+            album: album
         )
     }
 }

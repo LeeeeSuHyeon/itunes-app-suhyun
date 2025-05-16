@@ -9,16 +9,15 @@ import UIKit
 
 final class DetailView: UIView {
     private let posterView: PosterView
+    private let detailInfoView: DetailInfoView
 
     var dismissButton: UIButton {
         posterView.getDismissButton()
     }
 
-    private let detailInfoView: DetailInfoView
-
-    init(music: Music) {
-        self.posterView = PosterView(mediaInfo: music.mediaInfo, type: .music)
-        self.detailInfoView = DetailInfoView(music: music)
+    init(info: DetailInfo) {
+        self.posterView = PosterView(info: info)
+        self.detailInfoView = DetailInfoView(info: info)
         super.init(frame: .zero)
         configure()
     }
@@ -27,7 +26,6 @@ final class DetailView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented.")
     }
-
 }
 
 private extension DetailView {
@@ -48,13 +46,14 @@ private extension DetailView {
 
     func setConstraints() {
         posterView.snp.makeConstraints { make in
-            make.top.directionalHorizontalEdges.equalTo(safeAreaLayoutGuide)
+            make.top.equalTo(safeAreaLayoutGuide)
+            make.directionalHorizontalEdges.equalToSuperview()
         }
 
         detailInfoView.snp.makeConstraints { make in
             make.top.equalTo(posterView.snp.bottom).offset(16)
             make.directionalHorizontalEdges.equalToSuperview().inset(16)
+            make.bottom.lessThanOrEqualToSuperview()
         }
     }
 }
-

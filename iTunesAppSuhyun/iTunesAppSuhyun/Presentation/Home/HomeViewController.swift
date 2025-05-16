@@ -50,9 +50,9 @@ class HomeViewController: UIViewController {
                     return
                 }
 
-                let vc = MusicDetailViewController(music: item.music)
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true)
+                let detailVC = DetailViewController(info: DetailInfo(item.music))
+                detailVC.modalPresentationStyle = .fullScreen
+                self.present(detailVC, animated: true)
             }.disposed(by: disposeBag)
     }
 

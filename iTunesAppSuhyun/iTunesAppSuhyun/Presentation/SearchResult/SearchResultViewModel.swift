@@ -15,6 +15,8 @@ final class SearchResultViewModel: ViewModelProtocol {
     }
 
     struct State {
+        let moiveResult = PublishSubject<[Movie]>()
+        let podcastResult = PublishSubject<[Podcast]>()
         let searchResult = PublishSubject<[SearchResult]>()
         let error = PublishSubject<AppError>()
     }
@@ -68,14 +70,16 @@ final class SearchResultViewModel: ViewModelProtocol {
     }
 
     private func fetchMovie(keyword: String) async throws -> [SearchResult] {
-        return try await movieUseCase.fetchMovie(keyword: keyword)
-            .map{ SearchResult(mediaInfo: $0.mediaInfo) }
+        let result =  try await movieUseCase.fetchMovie(keyword: keyword)
+        state.moiveResult.onNext(result)
+        return result.map{ SearchResult(mediaInfo: $0.mediaInfo) }
 
     }
 
     private func fetchPodcast(keyword: String) async throws -> [SearchResult] {
-        return try await podcastUseCase.fetchPodcast(keyword: keyword)
-            .map{ SearchResult(mediaInfo: $0.mediaInfo) }
+        let result = try await podcastUseCase.fetchPodcast(keyword: keyword)
+        state.podcastResult.onNext(result)
+        return result.map{ SearchResult(mediaInfo: $0.mediaInfo) }
     }
 
     private func changedType(type: SearchType) {

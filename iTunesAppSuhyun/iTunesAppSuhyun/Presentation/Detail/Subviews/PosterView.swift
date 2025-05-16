@@ -8,7 +8,9 @@
 import UIKit
 
 final class PosterView: UIView {
-    private let mediaLabel: UILabel = {
+    private let info: DetailInfo
+
+    private let pageTitleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 24, weight: .bold)
         label.textColor = .black
@@ -21,6 +23,7 @@ final class PosterView: UIView {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }()
 
@@ -31,7 +34,6 @@ final class PosterView: UIView {
         config.image = .init(systemName: "xmark.circle.fill")
         config.baseForegroundColor = .systemGray
         config.contentInsets = .zero
-
         let button = UIButton()
         button.configuration = config
 
@@ -72,11 +74,11 @@ final class PosterView: UIView {
         return label
     }()
 
-    init(mediaInfo: MediaInfo, type: ITunesMediaType) {
+    init(info: DetailInfo) {
+        self.info = info
         super.init(frame: .zero)
-        self.mediaLabel.text = type.media.uppercased()
         configure()
-        configure(mediaInfo: mediaInfo)
+        configure(info: info)
     }
 
     @available(*, unavailable, message: "storyboard is not supported.")
@@ -88,11 +90,16 @@ final class PosterView: UIView {
         return self.dismissButton
     }
 
-    func configure(mediaInfo: MediaInfo) {
-        titleLabel.text = mediaInfo.title
-        artistLabel.text = mediaInfo.artist
-        genreLabel.text = mediaInfo.genre
-        imageView.setImage(with: mediaInfo.imageURL.replaceImageURL(toSize: 600) ?? mediaInfo.imageURL)
+    func configure(info: DetailInfo) {
+        pageTitleLabel.text = info.type.media
+        titleLabel.text = info.mediaInfo.title
+        artistLabel.text = info.mediaInfo.artist
+        genreLabel.text = info.mediaInfo.genre
+        imageView.setImage(
+            with: info.mediaInfo.imageURL.replaceImageURL(
+                toSize: 600
+            ) ?? info.mediaInfo.imageURL
+        )
     }
 
 }
@@ -104,18 +111,18 @@ private extension PosterView {
     }
 
     func setHierarchy() {
-        self.addSubviews(mediaLabel, imageView, dismissButton, infoStackView)
+        self.addSubviews(pageTitleLabel, imageView, dismissButton, infoStackView)
         infoStackView.addArrangedSubviews(genreLabel, titleLabel, artistLabel)
     }
 
     func setConstraints() {
-        mediaLabel.snp.makeConstraints { make in
+        pageTitleLabel.snp.makeConstraints { make in
             make.top.directionalHorizontalEdges.equalToSuperview()
-            make.height.equalTo(44)
+            make.height.equalTo(60)
         }
 
         imageView.snp.makeConstraints { make in
-            make.top.equalTo(mediaLabel.snp.bottom)
+            make.top.equalTo(pageTitleLabel.snp.bottom)
             make.directionalHorizontalEdges.bottom.equalToSuperview()
             make.height.equalTo(imageView.snp.width).multipliedBy(1.2)
         }

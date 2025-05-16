@@ -70,22 +70,10 @@ final class DetailInfoView: UIView {
         return label
     }()
 
-    init(music: Music) {
+    init(info: DetailInfo) {
         super.init(frame: .zero)
         configure()
-        configure(music: music)
-    }
-
-    init(movie: Movie) {
-        super.init(frame: .zero)
-        configure()
-        configure(movie: movie)
-    }
-
-    init(podcast: Podcast) {
-        super.init(frame: .zero)
-        configure()
-        configure(podcast: podcast)
+        configure(info: info)
     }
 
     @available(*, unavailable, message: "storyboard is not supported.")
@@ -93,28 +81,12 @@ final class DetailInfoView: UIView {
         fatalError("init(coder:) has not been implemented.")
     }
 
-    func configure(music: Music) {
-        titleLabel.text = music.mediaInfo.title
-        imageView.setImage(with: music.mediaInfo.imageURL, toSize: 100)
-        subTitleLabel.text = music.album
-        releaseDateLabel.text = music.mediaInfo.releaseDate.toReleaseDateFormmat()
-        replayTimeLabel.text = music.durationInSeconds.toReplayTime()
-    }
-
-    func configure(movie: Movie) {
-        titleLabel.text = movie.mediaInfo.title
-        imageView.setImage(with: movie.mediaInfo.imageURL, toSize: 100)
-        subTitleLabel.text = movie.contentAdvisoryRating
-        releaseDateLabel.text = movie.mediaInfo.releaseDate.toReleaseDateFormmat()
-//        replayTimeLabel.text = movie.durationInSeconds.toReplayTime()
-    }
-
-    func configure(podcast: Podcast) {
-        titleLabel.text = podcast.mediaInfo.title
-        imageView.setImage(with: podcast.mediaInfo.imageURL, toSize: 100)
-        subTitleLabel.text = podcast.mediaInfo.artist
-        releaseDateLabel.text = podcast.mediaInfo.releaseDate.toReleaseDateFormmat()
-//        replayTimeLabel.text = movie.durationInSeconds.toReplayTime()
+    func configure(info: DetailInfo) {
+        titleLabel.text = info.mediaInfo.title
+        imageView.setImage(with: info.mediaInfo.imageURL, toSize: 600)
+        subTitleLabel.text = info.subTitle
+        releaseDateLabel.text = info.mediaInfo.releaseDate.toReleaseDateFormmat()
+        replayTimeLabel.text = info.replayTime
     }
 }
 

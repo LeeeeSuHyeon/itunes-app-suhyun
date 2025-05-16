@@ -68,7 +68,8 @@ private extension SearchResultView {
     func setConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide)
-            make.directionalHorizontalEdges.equalToSuperview().inset(12)
+            make.leading.equalToSuperview().inset(12)
+            make.trailing.lessThanOrEqualToSuperview()
         }
 
         tableView.snp.makeConstraints { make in

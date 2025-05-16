@@ -1,5 +1,5 @@
 //
-//  MusicDetailViewController.swift
+//  DetailViewController.swift
 //  iTunesAppSuhyun
 //
 //  Created by 이수현 on 5/15/25.
@@ -9,15 +9,15 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-final class MusicDetailViewController: UIViewController {
+final class DetailViewController: UIViewController {
     private let detailView: DetailView
     private let disposeBag = DisposeBag()
 
-    init(music: Music) {
-        detailView = DetailView(music: music)
+    init(info: DetailInfo) {
+        detailView = DetailView(info: info)
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
