@@ -19,10 +19,10 @@ final class MockRepository: MusicRepositoryProtocol {
                     artist: "mockArtist",
                     imageURL: "mockImageURL",
                     genre: "mockGenre",
-                    releaseDate: Date()
+                    releaseDate: Date(),
+                    durationInSeconds: 0
                 ),
                 album: "mockAlbum",
-                durationInSeconds: 0
             )
         ]
     }
