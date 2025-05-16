@@ -10,5 +10,4 @@ import Foundation
 struct Music {
     let mediaInfo: MediaInfo
     let album: String
-    let durationInSeconds: Int
 }

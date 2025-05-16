@@ -41,7 +41,8 @@ final class MovieRepository: MovieRepositoryProtocol {
                 artist: dto.artist,
                 imageURL: dto.imageURL,
                 genre: dto.genre,
-                releaseDate: date
+                releaseDate: date,
+                durationInSeconds: dto.durationInMillis / 1000
             )
             return Movie(
                 mediaInfo: mediaInfo,

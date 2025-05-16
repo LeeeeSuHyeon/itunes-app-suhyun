@@ -14,4 +14,5 @@ struct MediaInfo {
     let imageURL: String
     let genre: String
     let releaseDate: Date
+    let durationInSeconds: Int
 }

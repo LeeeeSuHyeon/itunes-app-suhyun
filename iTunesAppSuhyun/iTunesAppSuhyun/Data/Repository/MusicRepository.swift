@@ -43,12 +43,12 @@ final class MusicRepository: MusicRepositoryProtocol {
                 artist: dto.artist,
                 imageURL: dto.imageURL,
                 genre: dto.genre,
-                releaseDate: date
+                releaseDate: date,
+                durationInSeconds: dto.durationInMillis / 1000
             )
             return Music(
                 mediaInfo: mediaInfo,
                 album: dto.album,
-                durationInSeconds: dto.durationInMillis / 1000
             )
         }
     }

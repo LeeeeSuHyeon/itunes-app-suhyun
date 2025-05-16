@@ -17,6 +17,7 @@ struct MovieDTO: Decodable {
     let contentAdvisoryRating: String
     let description: String
     let releaseDate: String
+    let durationInMillis: Int
 
     enum CodingKeys: String, CodingKey {
         case movieId = "trackId"
@@ -28,5 +29,20 @@ struct MovieDTO: Decodable {
         case contentAdvisoryRating = "contentAdvisoryRating"
         case description = "longDescription"
         case releaseDate
+        case durationInMillis = "trackTimeMillis"
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.movieId = try container.decode(Int.self, forKey: .movieId)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.artist = try container.decode(String.self, forKey: .artist)
+        self.imageURL = try container.decode(String.self, forKey: .imageURL)
+        self.price = try container.decode(Double.self, forKey: .price)
+        self.genre = try container.decode(String.self, forKey: .genre)
+        self.contentAdvisoryRating = try container.decode(String.self, forKey: .contentAdvisoryRating)
+        self.description = try container.decode(String.self, forKey: .description)
+        self.releaseDate = try container.decode(String.self, forKey: .releaseDate)
+        self.durationInMillis = try container.decodeIfPresent(Int.self, forKey: .durationInMillis) ?? 0
     }
 }

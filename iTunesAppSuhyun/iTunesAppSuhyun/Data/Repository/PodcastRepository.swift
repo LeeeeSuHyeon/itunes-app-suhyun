@@ -41,7 +41,8 @@ final class PodcastRepository: PodcastRepositoryProtocol {
                 artist: dto.artist,
                 imageURL: dto.imageURL,
                 genre: dto.genre,
-                releaseDate: date
+                releaseDate: date,
+                durationInSeconds: dto.durationInMillis / 1000
             )
             return Podcast(mediaInfo: mediaInfo)
         }
