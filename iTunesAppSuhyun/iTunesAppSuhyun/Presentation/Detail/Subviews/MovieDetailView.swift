@@ -53,8 +53,12 @@ final class MovieDetailView: UIStackView {
         return label
     }()
 
+    let previewView: PreviewView
+
     init(info: MovieExtraInfo) {
+        self.previewView = PreviewView(info: info)
         super.init(frame: .zero)
+
         configure()
         configure(with: info)
     }
@@ -66,6 +70,10 @@ final class MovieDetailView: UIStackView {
     private func configure(with info: MovieExtraInfo) {
         self.priceInfoLabel.text = Int(info.price).toKRW()
         self.descriptionInfoLabel.text = info.description
+    }
+
+    func setPreviewDeleate(_ delegate: PreviewViewDelegate) {
+        previewView.setPreviewDeleate(delegate)
     }
 }
 
@@ -82,7 +90,7 @@ private extension MovieDetailView {
     }
 
     func setHierarchy() {
-        self.addArrangedSubviews(priceStacKView, descriptionStacKView)
+        self.addArrangedSubviews(priceStacKView, descriptionStacKView, previewView)
         priceStacKView.addArrangedSubviews(priceLabel, priceInfoLabel)
         descriptionStacKView.addArrangedSubviews(descriptionLabel, descriptionInfoLabel)
     }

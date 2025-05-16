@@ -74,7 +74,7 @@ private extension SearchResultView {
 
         tableView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(12)
-            make.bottom.equalTo(safeAreaLayoutGuide)
+            make.bottom.equalToSuperview()
             make.directionalHorizontalEdges.equalToSuperview().inset(12)
         }
     }

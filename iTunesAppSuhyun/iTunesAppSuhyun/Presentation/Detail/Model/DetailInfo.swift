@@ -26,7 +26,12 @@ struct DetailInfo {
         self.type = .movie
         self.subTitle = movie.contentAdvisoryRating
         self.replayTime = movie.mediaInfo.durationInSeconds.toReplayTime()
-        self.extraInfo = MovieExtraInfo(price: movie.price, description: movie.description)
+        self.extraInfo = MovieExtraInfo(
+            price: movie.price,
+            description: movie.description,
+            previewURL: movie.previewURL,
+            thumbnailImageURL: movie.mediaInfo.imageURL
+        )
     }
 
     init(_ podcast: Podcast) {

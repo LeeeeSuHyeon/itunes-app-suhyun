@@ -64,6 +64,10 @@ final class DetailView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented.")
     }
+
+    func setPreviewDelegate(_ delegate: PreviewViewDelegate) {
+        (extraInfoView as? MovieDetailView)?.setPreviewDeleate(delegate)
+    }
 }
 
 private extension DetailView {
