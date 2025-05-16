@@ -64,7 +64,7 @@ final class MovieDetailView: UIStackView {
     }
 
     private func configure(with info: MovieExtraInfo) {
-        self.priceInfoLabel.text = "\(info.price)"
+        self.priceInfoLabel.text = Int(info.price).toKRW()
         self.descriptionInfoLabel.text = info.description
     }
 }
