@@ -41,15 +41,3 @@ struct DetailInfo {
         self.replayTime = podcast.mediaInfo.durationInSeconds.toReplayTime()
     }
 }
-
-extension DetailInfo {
-    enum MediaType: String {
-        case music
-        case movie
-        case podcast
-
-        var media: String {
-            self.rawValue.uppercased()
-        }
-    }
-}

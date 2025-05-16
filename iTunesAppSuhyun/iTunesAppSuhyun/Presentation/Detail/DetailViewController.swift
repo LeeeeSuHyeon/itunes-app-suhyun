@@ -45,7 +45,6 @@ final class DetailViewController: UIViewController {
 
 extension DetailViewController: PreviewViewDelegate {
     func didTapPlayButton(_ previewURLString: String) {
-        print(#function)
         guard let url = URL(string: previewURLString) else{ return }
         let player = AVPlayer(url: url)
         let playerController = AVPlayerViewController()

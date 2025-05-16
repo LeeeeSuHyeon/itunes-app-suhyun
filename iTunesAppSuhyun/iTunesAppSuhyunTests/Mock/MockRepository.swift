@@ -14,6 +14,7 @@ final class MockRepository: MusicRepositoryProtocol {
         return [
             Music(
                 mediaInfo: MediaInfo(
+                    type: .music,
                     id: 0,
                     title:  "mockTitle",
                     artist: "mockArtist",

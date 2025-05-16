@@ -8,6 +8,7 @@
 import Foundation
 
 struct MediaInfo {
+    let type: MediaType
     let id: Int
     let title: String
     let artist: String

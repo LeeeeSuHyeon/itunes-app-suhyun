@@ -20,7 +20,7 @@ final class PodcastRepository: PodcastRepositoryProtocol {
                 keyword: keyword,
                 country: country,
                 limit: limit,
-                media: ITunesMediaType.podcast.media
+                media: MediaType.podcast.media
             )
             return transform(from: result.results)
         } catch {
@@ -36,6 +36,7 @@ final class PodcastRepository: PodcastRepositoryProtocol {
         return results.compactMap { dto -> Podcast? in
             guard let date = Date(iso8601String: dto.releaseDate) else{ return nil }
             let mediaInfo = MediaInfo(
+                type: .podcast,
                 id: dto.podcastId,
                 title: dto.title,
                 artist: dto.artist,

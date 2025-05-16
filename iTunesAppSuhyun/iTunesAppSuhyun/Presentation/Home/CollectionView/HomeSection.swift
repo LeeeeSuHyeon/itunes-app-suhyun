@@ -218,6 +218,7 @@ enum HomeItem: Hashable {
     }
 
     struct MusicItem: Hashable {
+        let type: MediaType
         let musicId: Int
         let title: String
         let artist: String
@@ -232,6 +233,7 @@ enum HomeItem: Hashable {
 extension HomeItem.MusicItem {
     init(from music: Music) {
         self.init(
+            type: music.mediaInfo.type,
             musicId: music.mediaInfo.id,
             title: music.mediaInfo.title,
             artist: music.mediaInfo.artist,
@@ -246,6 +248,7 @@ extension HomeItem.MusicItem {
     func toMusic() -> Music {
         return Music(
             mediaInfo: MediaInfo(
+                type: type,
                 id: musicId,
                 title: title,
                 artist: artist,

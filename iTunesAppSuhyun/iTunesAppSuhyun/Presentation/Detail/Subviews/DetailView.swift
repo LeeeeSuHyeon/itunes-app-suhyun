@@ -131,7 +131,6 @@ private extension DetailView {
                 make.bottom.equalToSuperview()
             }
         } else {
-
             detailInfoView.snp.makeConstraints { make in
                 make.top.equalTo(posterView.snp.bottom).offset(16)
                 make.directionalHorizontalEdges.equalToSuperview().inset(16)

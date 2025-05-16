@@ -20,7 +20,7 @@ final class MovieRepository: MovieRepositoryProtocol {
                 keyword: keyword,
                 country: country,
                 limit: limit,
-                media: ITunesMediaType.movie.media
+                media: MediaType.movie.media
             )
             return transfrom(from: result.results)
         } catch {
@@ -36,6 +36,7 @@ final class MovieRepository: MovieRepositoryProtocol {
         return results.compactMap { (dto: MovieDTO) -> Movie? in
             guard let date = Date(iso8601String: dto.releaseDate) else{ return nil }
             let mediaInfo = MediaInfo(
+                type: .movie,
                 id: dto.movieId,
                 title: dto.title,
                 artist: dto.artist,
