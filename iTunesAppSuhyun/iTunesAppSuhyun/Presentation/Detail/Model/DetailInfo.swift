@@ -12,6 +12,7 @@ struct DetailInfo {
     let type: MediaType
     let subTitle: String
     let replayTime: String
+    var extraInfo: ExtraInfoProtocol?
 
     init(_ music: Music) {
         self.mediaInfo = music.mediaInfo
@@ -25,6 +26,7 @@ struct DetailInfo {
         self.type = .movie
         self.subTitle = movie.contentAdvisoryRating
         self.replayTime = movie.mediaInfo.durationInSeconds.toReplayTime()
+        self.extraInfo = MovieExtraInfo(price: movie.price, description: movie.description)
     }
 
     init(_ podcast: Podcast) {

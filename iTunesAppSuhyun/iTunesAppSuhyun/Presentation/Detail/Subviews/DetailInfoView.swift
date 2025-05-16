@@ -7,14 +7,7 @@
 
 import UIKit
 
-final class DetailInfoView: UIView {
-
-    private let horizontalInfoStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        return stackView
-    }()
+final class DetailInfoView: UIStackView {
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -77,8 +70,8 @@ final class DetailInfoView: UIView {
     }
 
     @available(*, unavailable, message: "storyboard is not supported.")
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented.")
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     func configure(info: DetailInfo) {
@@ -99,21 +92,18 @@ private extension DetailInfoView {
     }
 
     func setLayout() {
+        self.axis = .horizontal
+        self.spacing = 8
         self.backgroundColor = .white
     }
 
     func setHierarchy() {
-        self.addSubviews(horizontalInfoStackView)
-        horizontalInfoStackView.addArrangedSubviews(imageView, verticalInfoStackView)
+        self.addArrangedSubviews(imageView, verticalInfoStackView)
         verticalInfoStackView.addArrangedSubviews(titleLabel, subTitleLabel, etcInfoStackView)
         etcInfoStackView.addArrangedSubviews(releaseDateLabel, replayTimeLabel)
     }
 
     func setConstraints() {
-        horizontalInfoStackView.snp.makeConstraints { make in
-            make.top.directionalHorizontalEdges.equalToSuperview()
-        }
-
         imageView.snp.makeConstraints { make in
             make.size.equalTo(80)
         }

@@ -8,8 +8,17 @@
 import UIKit
 
 final class DetailView: UIView {
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        return scrollView
+    }()
+
+    private let contentView = UIView()
+
     private let posterView: PosterView
     private let detailInfoView: DetailInfoView
+    private var extraInfoView: UIStackView?
 
     var dismissButton: UIButton {
         posterView.getDismissButton()
@@ -18,6 +27,11 @@ final class DetailView: UIView {
     init(info: DetailInfo) {
         self.posterView = PosterView(info: info)
         self.detailInfoView = DetailInfoView(info: info)
+
+        if let extraInfo = info.extraInfo as? MovieExtraInfo {
+            extraInfoView = MovieDetailView(info: extraInfo)
+        }
+
         super.init(frame: .zero)
         configure()
     }
@@ -41,19 +55,48 @@ private extension DetailView {
     }
 
     func setHierarchy() {
-        self.addSubviews(posterView, detailInfoView)
+        self.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubviews(posterView, detailInfoView)
+
+        if let extraInfoView {
+            contentView.addSubview(extraInfoView)
+        }
     }
 
     func setConstraints() {
-        posterView.snp.makeConstraints { make in
+        scrollView.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide)
-            make.directionalHorizontalEdges.equalToSuperview()
+            make.bottom.directionalHorizontalEdges.equalToSuperview()
         }
 
-        detailInfoView.snp.makeConstraints { make in
-            make.top.equalTo(posterView.snp.bottom).offset(16)
-            make.directionalHorizontalEdges.equalToSuperview().inset(16)
-            make.bottom.lessThanOrEqualToSuperview()
+        contentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+
+        posterView.snp.makeConstraints { make in
+            make.top.directionalHorizontalEdges.equalToSuperview()
+        }
+
+        if let extraInfoView {
+            detailInfoView.snp.makeConstraints { make in
+                make.top.equalTo(posterView.snp.bottom).offset(16)
+                make.directionalHorizontalEdges.equalToSuperview().inset(16)
+            }
+
+            extraInfoView.snp.makeConstraints { make in
+                make.top.equalTo(detailInfoView.snp.bottom).offset(20)
+                make.directionalHorizontalEdges.equalToSuperview().inset(16)
+                make.bottom.equalToSuperview()
+            }
+        } else {
+
+            detailInfoView.snp.makeConstraints { make in
+                make.top.equalTo(posterView.snp.bottom).offset(16)
+                make.directionalHorizontalEdges.equalToSuperview().inset(16)
+                make.bottom.lessThanOrEqualToSuperview()
+            }
         }
     }
 }
