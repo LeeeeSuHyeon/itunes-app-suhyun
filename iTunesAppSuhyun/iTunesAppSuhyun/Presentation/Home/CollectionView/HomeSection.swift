@@ -227,6 +227,7 @@ enum HomeItem: Hashable {
         let imageURL: String
         let releaseDate: Date
         let durationInSeconds: Int
+        let previewURL: String
     }
 }
 
@@ -241,7 +242,8 @@ extension HomeItem.MusicItem {
             genre: music.mediaInfo.genre,
             imageURL: music.mediaInfo.imageURL,
             releaseDate: music.mediaInfo.releaseDate,
-            durationInSeconds: music.mediaInfo.durationInSeconds
+            durationInSeconds: music.mediaInfo.durationInSeconds,
+            previewURL: music.previewURL
         )
     }
 
@@ -257,7 +259,8 @@ extension HomeItem.MusicItem {
                 releaseDate: releaseDate,
                 durationInSeconds: durationInSeconds
             ),
-            album: album
+            album: album,
+            previewURL: previewURL
         )
     }
 }

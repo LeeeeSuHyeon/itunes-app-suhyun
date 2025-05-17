@@ -50,6 +50,7 @@ final class MusicRepository: MusicRepositoryProtocol {
             return Music(
                 mediaInfo: mediaInfo,
                 album: dto.album,
+                previewURL: dto.previewURL
             )
         }
     }
