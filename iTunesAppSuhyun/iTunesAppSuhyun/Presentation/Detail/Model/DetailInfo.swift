@@ -19,6 +19,12 @@ struct DetailInfo {
         self.type = .music
         self.subTitle = music.album
         self.replayTime = music.mediaInfo.durationInSeconds.toReplayTime()
+        self.extraInfo = MusicExtraInfo(
+            previewInfo: PreviewInfo(
+                previewURL: music.previewURL ,
+                thumbnailImageURL: music.mediaInfo.imageURL
+            )
+        )
     }
 
     init(_ movie: Movie) {
@@ -29,8 +35,10 @@ struct DetailInfo {
         self.extraInfo = MovieExtraInfo(
             price: movie.price,
             description: movie.description,
-            previewURL: movie.previewURL,
-            thumbnailImageURL: movie.mediaInfo.imageURL
+            previewInfo: PreviewInfo(
+                previewURL: movie.previewURL,
+                thumbnailImageURL: movie.mediaInfo.imageURL
+            )
         )
     }
 

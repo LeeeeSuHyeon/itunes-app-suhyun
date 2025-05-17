@@ -56,7 +56,7 @@ final class MovieDetailView: UIStackView, PreviewProvider {
     }()
 
     init(info: MovieExtraInfo) {
-        self.previewView = PreviewView(info: info)
+        self.previewView = PreviewView(info: info.previewInfo)
         super.init(frame: .zero)
 
         configure()

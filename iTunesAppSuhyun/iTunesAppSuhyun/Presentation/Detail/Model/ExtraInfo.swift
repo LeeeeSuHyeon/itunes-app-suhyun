@@ -12,6 +12,9 @@ protocol ExtraInfoProtocol {}
 struct MovieExtraInfo: ExtraInfoProtocol {
     var price: Double
     var description: String
-    var previewURL: String
-    var thumbnailImageURL: String
+    var previewInfo: PreviewInfo
+}
+
+struct MusicExtraInfo: ExtraInfoProtocol {
+    var previewInfo: PreviewInfo
 }

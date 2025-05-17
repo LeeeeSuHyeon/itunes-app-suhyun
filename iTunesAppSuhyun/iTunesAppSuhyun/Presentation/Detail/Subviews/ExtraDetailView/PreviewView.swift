@@ -58,7 +58,7 @@ final class PreviewView: UIStackView {
         return button
     }()
 
-    init(info: MovieExtraInfo) {
+    init(info: PreviewInfo) {
         self.previewURLString = info.previewURL
         super.init(frame: .zero)
         configure()

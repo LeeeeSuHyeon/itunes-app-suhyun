@@ -54,6 +54,8 @@ final class DetailView: UIView {
 
         if let extraInfo = info.extraInfo as? MovieExtraInfo {
             extraInfoView = MovieDetailView(info: extraInfo)
+        } else if let extraInfo = info.extraInfo as? MusicExtraInfo {
+            extraInfoView = MusicDetailView(info: extraInfo)
         }
 
         super.init(frame: .zero)
