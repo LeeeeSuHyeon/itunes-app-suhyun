@@ -52,10 +52,12 @@ final class DetailView: UIView {
         self.posterView = PosterView(info: info)
         self.detailInfoView = DetailInfoView(info: info)
 
-        if let extraInfo = info.extraInfo as? MovieExtraInfo {
+        switch info.extraInfo {
+        case let extraInfo as MovieExtraInfo:
             extraInfoView = MovieDetailView(info: extraInfo)
-        } else if let extraInfo = info.extraInfo as? MusicExtraInfo {
+        case let extraInfo as MusicExtraInfo:
             extraInfoView = MusicDetailView(info: extraInfo)
+        default: break
         }
 
         super.init(frame: .zero)
