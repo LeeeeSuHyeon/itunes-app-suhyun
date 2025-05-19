@@ -24,6 +24,7 @@ final class MockRepository: MusicRepositoryProtocol {
                     durationInSeconds: 0
                 ),
                 album: "mockAlbum",
+                previewURL: "",
             )
         ]
     }

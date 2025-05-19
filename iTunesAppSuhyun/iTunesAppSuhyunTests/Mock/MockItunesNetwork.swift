@@ -27,7 +27,8 @@ extension MockItunesNetwork {
                     genre: "mockGenre",
                     imageURL:  "mockImageURL",
                     releaseDate:  "2023-05-01T12:00:00Z",
-                    durationInMillis: 0
+                    durationInMillis: 0, 
+                    previewURL: ""
                 )
             ]
         )

@@ -22,7 +22,7 @@ protocol PreviewViewDelegate: AnyObject {
 final class PreviewView: UIStackView {
     private let previewURLString: String
     private let disposeBag = DisposeBag()
-    var delegate: PreviewViewDelegate?
+    weak var delegate: PreviewViewDelegate?
 
     private let titleLabel: UILabel = {
         let label = UILabel()
