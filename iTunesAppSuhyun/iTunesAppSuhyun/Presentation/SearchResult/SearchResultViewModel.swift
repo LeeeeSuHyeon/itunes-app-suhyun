@@ -32,6 +32,8 @@ final class SearchResultViewModel: ViewModelProtocol {
     let action = PublishSubject<Action>()
     fileprivate(set) var state: State = State()
 
+    private var fetchTask: Task<Void, Never>?
+
     init(
         movieUseCase: MovieUseCaseProtocol,
         podcastUseCase: PodcastUseCaseProtocol
@@ -56,7 +58,7 @@ final class SearchResultViewModel: ViewModelProtocol {
     }
 
     private func fetchData(keyword: String, type: SearchType) {
-        Task {
+        fetchTask = Task {
             async let movieData = fetchMovie(keyword: keyword)
             async let podcastData = fetchPodcast(keyword: keyword)
 
@@ -97,5 +99,9 @@ final class SearchResultViewModel: ViewModelProtocol {
         } else {
             state.error.onNext(AppError.unKnown(error))
         }
+    }
+
+    deinit {
+        fetchTask?.cancel()
     }
 }

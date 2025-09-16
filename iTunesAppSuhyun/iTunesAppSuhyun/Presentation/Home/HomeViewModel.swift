@@ -34,6 +34,8 @@ final class HomeViewModel: ViewModelProtocol {
     let action = PublishSubject<Action>()
     fileprivate(set) var state = State()
 
+    private var fetchTask: Task<Void, Never>?
+
     init(musicUseCase: MusicUseCaseProtocol) {
         self.musicUseCase = musicUseCase
         setBinding()
@@ -49,7 +51,7 @@ final class HomeViewModel: ViewModelProtocol {
     }
 
     private func fetchMusic() {
-        Task {
+        fetchTask = Task {
             do {
                 try await withThrowingTaskGroup(of: (HomeSection, [Music]).self) {[weak self] group in
                     guard let self else { return }
@@ -79,5 +81,9 @@ final class HomeViewModel: ViewModelProtocol {
         case .autumn: return state.autumnItem
         case .winter: return state.winterItem
         }
+    }
+
+    deinit {
+        fetchTask?.cancel()
     }
 }
