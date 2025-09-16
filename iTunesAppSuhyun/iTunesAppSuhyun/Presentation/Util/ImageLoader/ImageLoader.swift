@@ -29,10 +29,8 @@ final class ImageLoader {
                 return cachedImage
             }
 
-            Task {
-                os_log("[ImageLoader]: 캐시 이미지 기간 만료", type: .default)
-                await expiryStore.removeExpiryDate(for: urlString)
-            }
+            os_log("[ImageLoader]: 캐시 이미지 기간 만료", type: .default)
+            await expiryStore.removeExpiryDate(for: urlString)
         }
 
         if let ongoingTask = await taskStore.getTask(for: urlString) {
@@ -42,15 +40,12 @@ final class ImageLoader {
         guard let url = URL(string: urlString) else { return nil }
 
         let task: Task<UIImage?, Never> = Task {
-            defer {
-                Task { await taskStore.removeTask(for: urlString) }
-            }
-
             do {
                 let (data, _) = try await URLSession.shared.data(from: url)
                 guard let image = UIImage(data: data) else { return nil }
 
                 cache.setObject(image, forKey: urlString as NSString, cost: data.count)
+                await taskStore.removeTask(for: urlString)
                 await expiryStore.setExpiryDate(date: Date().addingTimeInterval(ttl), for: urlString)
                 return image
             } catch {
@@ -59,6 +54,7 @@ final class ImageLoader {
                     type: .fault,
                     error.localizedDescription
                 )
+                await taskStore.removeTask(for: urlString)
                 return nil
             }
         }
