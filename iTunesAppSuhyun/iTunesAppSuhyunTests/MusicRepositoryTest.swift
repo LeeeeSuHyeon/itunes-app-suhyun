@@ -22,19 +22,8 @@ final class MusicRepositoryTest: XCTestCase {
         super.tearDown()
     }
 
-    func test_fetchMusic() {
-        let expectation = expectation(description: "expect result count 1")
-
-        Task {
-            do {
-                let result = try await repository.fetchMusic(keyword: "", country: "", limit: 0)
-                XCTAssertEqual(result.count, 1)
-                expectation.fulfill()
-            } catch {
-                XCTFail("❌ fetchMusic Test 실패")
-            }
-        }
-
-        wait(for: [expectation], timeout: 2)
+    func test_fetchMusic() async throws {
+        let result = try await repository.fetchMusic(keyword: "", country: "", limit: 0)
+        XCTAssertEqual(result.count, 1)
     }
 }

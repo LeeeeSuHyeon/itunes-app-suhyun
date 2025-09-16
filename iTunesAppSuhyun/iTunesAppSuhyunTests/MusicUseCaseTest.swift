@@ -21,23 +21,11 @@ final class MusicUseCaseTest: XCTestCase {
         super.tearDown()
     }
 
-    func test_fetchMusic() {
-        let expectation = expectation(description: "expect result count 1")
+    func test_fetchMusic() async throws {
+        let resultWithAllParams = try await useCase.fetchMusic(keyword: "", country: "", limit: 0)
+        XCTAssertEqual(resultWithAllParams.count, 1)
 
-        Task {
-            do {
-                let resultWithAllParams = try await useCase.fetchMusic(keyword: "", country: "", limit: 0)
-                XCTAssertEqual(resultWithAllParams.count, 1)
-
-                let resultWithOnlyKeyword = try await useCase.fetchMusic(keyword: "")
-                XCTAssertEqual(resultWithOnlyKeyword.count, 1)
-
-                expectation.fulfill()
-            } catch {
-                XCTFail("❌ fetchMusic Test 실패")
-            }
-        }
-
-        wait(for: [expectation], timeout: 2)
+        let resultWithOnlyKeyword = try await useCase.fetchMusic(keyword: "")
+        XCTAssertEqual(resultWithOnlyKeyword.count, 1)
     }
 }
