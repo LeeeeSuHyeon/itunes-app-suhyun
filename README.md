@@ -160,3 +160,4 @@ weak var delegate: PreviewViewDelegate?
 ## TIL / 트러블 슈팅
 - [Swift Concurrency를 이용한 네트워크 병렬 처리 방법 비교](https://soo-hyn.tistory.com/150)
 - [Itunes Search API의 이미지 저해상도 👉 고해상도로 변경](https://soo-hyn.tistory.com/151)
+- [Swift Concurrency Instruments 활용하여 동시성 최적화](https://soo-hyn.tistory.com/162)
